@@ -2,9 +2,9 @@
 Process tool allows you to run applications as a normal user when you are already elevated from another process.
 
 ## Command line arguments
-Process tool usage: ProcessTool [opt: -normal or -admin] [opt: -nouiaccess] [req: -exepath="notepad.exe"] [opt: -workpath="WorkingDirectory"] [opt: -args="LaunchArguments"]
-- Launch: ProcessTool -exepath="C:\\Windows\\System32\\Notepad.exe" -workpath="C:\\Windows\\System32" -args="Textfile.txt"
-- Launch: ProcessTool -uwp="Microsoft.WindowsCalculator_8wekyb3d8bbwe!App"
+- ProcessTool [opt: -normal or -admin] [opt: -nouiaccess] [req: -exepath="notepad.exe"] [opt: -workpath="WorkingDirectory"] [opt: -args="LaunchArguments"]
+- Launch: ProcessTool -exepath="C:\Windows\System32\Notepad.exe" -workpath="C:\Windows\System32" -args="Textfile.txt"
+- Launch: ProcessTool -uwp="Microsoft.WindowsNotepad_8wekyb3d8bbwe!App" -args="Textfile.txt"
 - Restart: ProcessTool -restart -pid=1000 or -pname="notepad"
 - Close: ProcessTool -close -pid=1000 or -pname="notepad"
 
