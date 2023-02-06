@@ -180,6 +180,12 @@
     <ClCompile Include="processstatus.cpp" />
     <ClCompile Include="variables.cpp" />
   </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="AssemblyInfo.rc" />
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="AppIcon.ico" />
+  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>
