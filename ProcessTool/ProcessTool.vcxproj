@@ -117,8 +117,11 @@
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <UACExecutionLevel>AsInvoker</UACExecutionLevel>
-      <UACUIAccess>true</UACUIAccess>
+      <UACUIAccess>false</UACUIAccess>
     </Link>
+    <PostBuildEvent>
+      <Command>$(SolutionDir)SignToolExe.exe</Command>
+    </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClCompile>
@@ -151,8 +154,11 @@
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <UACExecutionLevel>AsInvoker</UACExecutionLevel>
-      <UACUIAccess>true</UACUIAccess>
+      <UACUIAccess>false</UACUIAccess>
     </Link>
+    <PostBuildEvent>
+      <Command>$(SolutionDir)SignToolExe.exe</Command>
+    </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="defines.cpp" />
