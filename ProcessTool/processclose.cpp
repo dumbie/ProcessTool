@@ -18,8 +18,49 @@ namespace
 		{
 			BOOL processClosed = TerminateProcess(closeProcess, 1);
 			CloseHandle(closeProcess);
+			std::wcout << L"Closed process by id: " << processId << "/" << processClosed << std::endl;
 			return processClosed;
 		}
+	}
+
+	BOOL Close_ProcessTreeId(DWORD processId)
+	{
+		std::wcout << L"Closing process tree by id: " << processId << std::endl;
+
+		HANDLE processSnap = CreateToolhelp32Snapshot(TH32CS_SNAPPROCESS, 0);
+		if (processSnap == INVALID_HANDLE_VALUE || processSnap == NULL)
+		{
+			std::wcout << L"Closing ProcessTreeId failed: " << GetLastError() << std::endl;
+			return FALSE;
+		}
+
+		//Terminate child processes
+		PROCESSENTRY32W processEntry{};
+		processEntry.dwSize = sizeof(PROCESSENTRY32W);
+		while (Process32NextW(processSnap, &processEntry))
+		{
+			if (processEntry.th32ParentProcessID == processId)
+			{
+				HANDLE childProcess = OpenProcess(PROCESS_TERMINATE, FALSE, processEntry.th32ProcessID);
+				if (childProcess)
+				{
+					TerminateProcess(childProcess, 1);
+					CloseHandle(childProcess);
+				}
+			}
+		}
+		CloseHandle(processSnap);
+
+		//Terminate main process
+		HANDLE mainProcess = OpenProcess(PROCESS_TERMINATE, FALSE, processId);
+		if (mainProcess)
+		{
+			TerminateProcess(mainProcess, 1);
+			CloseHandle(mainProcess);
+		}
+
+		std::wcout << L"Closed process tree by id: " << processId << std::endl;
+		return TRUE;
 	}
 
 	BOOL Close_ProcessMessageHwnd(HWND windowHandle)
@@ -28,7 +69,10 @@ namespace
 
 		LRESULT resultClose = SendMessageW(windowHandle, WM_CLOSE, 0, 0);
 		LRESULT resultQuit = SendMessageW(windowHandle, WM_QUIT, 0, 0);
-		return (resultClose == CB_ERR || resultClose == LB_ERRSPACE) && (resultQuit == CB_ERR || resultQuit == LB_ERRSPACE);
+
+		BOOL processClosed = (resultClose == CB_ERR || resultClose == LB_ERRSPACE) && (resultQuit == CB_ERR || resultQuit == LB_ERRSPACE);
+		std::wcout << L"Closed process by window message: " << windowHandle << "/" << processClosed << std::endl;
+		return processClosed;
 	}
 
 	BOOL Close_ProcessesName(std::wstring processName)
@@ -49,7 +93,7 @@ namespace
 			if (TerminateProcess(process.ProcessHandle, 1))
 			{
 				processClosed = TRUE;
-				std::wcout << L"Found and closed process: " << process.ProcessId << "/" << process.ExecutableName << "/" << process.ApplicationUserModelId << std::endl;
+				std::wcout << L"Found and closed process by name: " << process.ProcessId << "/" << process.ExecutableName << "/" << process.ApplicationUserModelId << std::endl;
 			}
 			CloseHandle(process.ProcessHandle);
 		}
