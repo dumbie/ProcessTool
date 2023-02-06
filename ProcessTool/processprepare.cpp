@@ -9,7 +9,7 @@
 
 namespace
 {
-	void Launch_Prepare(std::wstring exePath, std::wstring workPath, std::wstring arguments, BOOL asNormal, BOOL asAdmin, BOOL noUiAccess)
+	void Launch_Prepare(std::wstring exePath, std::wstring workPath, std::wstring arguments, BOOL asNormal, BOOL asAdmin, BOOL allowUiAccess)
 	{
 		//Check required process action
 		BOOL launchShellExecute = TRUE;
@@ -44,7 +44,7 @@ namespace
 		}
 
 		//Adjust token ui access
-		if (vToolUiAccess && noUiAccess)
+		if (vToolUiAccess && !allowUiAccess)
 		{
 			std::wcout << L"Starting process without uiaccess." << std::endl;
 			Token_Adjust_DisableUiAccess(launchTokenHandle);

@@ -20,7 +20,7 @@ namespace
 		//argc = 6;
 		//argv = new wchar_t* [6];
 		//argv[1] = String_Convert_to_LPWSTR("-normal");
-		//argv[2] = String_Convert_to_LPWSTR("-nouiaccess");
+		//argv[2] = String_Convert_to_LPWSTR("-allowuiaccess");
 		//argv[3] = String_Convert_to_LPWSTR("-exepath=""\"C:\\Windows\\System32\\Notepad.exe""\"");
 		//argv[4] = String_Convert_to_LPWSTR("-workpath=""\"E:\\""\"");
 		//argv[5] = String_Convert_to_LPWSTR("-args=""\"textfile.txt""\"");
@@ -50,7 +50,7 @@ namespace
 		if (argc < 2)
 		{
 			std::wcout << L"Command line arguments:" << std::endl;
-			std::wcout << L"Launch executable: ProcessTool -exepath=""\"C:\\Windows\\System32\\Notepad.exe""\" [opt: -workpath=""\"C:\\Windows\\System32""\"] [opt: -args=""\"Textfile.txt""\"] [opt: -normal or -admin] [opt: -nouiaccess]" << std::endl;
+			std::wcout << L"Launch executable: ProcessTool -exepath=""\"C:\\Windows\\System32\\Notepad.exe""\" [opt: -workpath=""\"C:\\Windows\\System32""\"] [opt: -args=""\"Textfile.txt""\"] [opt: -normal or -admin] [opt: -allowuiaccess]" << std::endl;
 			std::wcout << L"Launch Windows Store: ProcessTool -uwp=""\"Microsoft.WindowsNotepad_8wekyb3d8bbwe!App""\" [opt: -args=""\"Textfile.txt""\"]" << std::endl;
 			std::wcout << L"Close: ProcessTool -close -pid=1000 or -pname=""\"Notepad.exe""\" or -pname=""\"Microsoft.WindowsNotepad_8wekyb3d8bbwe!App""\"" << std::endl;
 			std::wcout << L"Restart: ProcessTool -restart -pid=1000 [opt: -skipargs]" << std::endl;
@@ -70,7 +70,7 @@ namespace
 		BOOL argumentUWP = FALSE;
 		BOOL argumentNormal = FALSE;
 		BOOL argumentAdmin = FALSE;
-		BOOL argumentNoUiAccess = FALSE;
+		BOOL argumentAllowUiAccess = FALSE;
 		BOOL argumentClose = FALSE;
 		BOOL argumentRestart = FALSE;
 		BOOL argumentSkipArgs = FALSE;
@@ -140,9 +140,9 @@ namespace
 				}
 			}
 
-			if (std::wstring(argument).starts_with(L"-nouiaccess"))
+			if (std::wstring(argument).starts_with(L"-allowuiaccess"))
 			{
-				argumentNoUiAccess = TRUE;
+				argumentAllowUiAccess = TRUE;
 			}
 
 			if (std::wstring(argument).starts_with(L"-close"))
@@ -206,7 +206,7 @@ namespace
 					std::wcout << L"Executable path not set." << std::endl;
 					return 0;
 				}
-				Launch_Prepare(argumentExePath, argumentWorkPath, argumentArgs, argumentNormal, argumentAdmin, argumentNoUiAccess);
+				Launch_Prepare(argumentExePath, argumentWorkPath, argumentArgs, argumentNormal, argumentAdmin, argumentAllowUiAccess);
 			}
 		}
 
