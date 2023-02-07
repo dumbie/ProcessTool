@@ -10,73 +10,50 @@
 
 namespace
 {
-	BOOL Restart_ProcessId(DWORD processId, BOOL skipArgs)
+	BOOL Restart_ProcessId(DWORD processId, BOOL skipArgs, std::wstring newArgs)
 	{
 		std::wcout << L"Restarting process by id: " << processId << std::endl;
 
 		//Open restart process
-		DWORD openDesiredAccess;
+		DWORD desiredAccess;
+		__Process_Access processAccess;
 		if (vToolAdminAccess)
 		{
-			openDesiredAccess = PROCESS_QUERY_INFORMATION | PROCESS_VM_READ;
+			desiredAccess = PROCESS_QUERY_INFORMATION | PROCESS_VM_READ;
 		}
 		else
 		{
 			//Get process access
-			__Process_Access processAccess = Process_GetAccessStatus(processId, false);
+			processAccess = Process_GetAccessStatus(processId, false);
 			if (processAccess.ProcessAdminAccess)
 			{
-				openDesiredAccess = PROCESS_QUERY_LIMITED_INFORMATION;
-				//PROCESS_VM_READ does not work when opening an elevated process as normal user.
-				std::wcout << L"Restart limited, missing administrator access." << std::endl;
+				desiredAccess = PROCESS_QUERY_LIMITED_INFORMATION;
 			}
 			else
 			{
-				openDesiredAccess = PROCESS_QUERY_INFORMATION | PROCESS_VM_READ;
+				desiredAccess = PROCESS_QUERY_INFORMATION | PROCESS_VM_READ;
 			}
 		}
 
-		HANDLE processHandle = OpenProcess(openDesiredAccess, FALSE, processId);
-		if (processHandle == INVALID_HANDLE_VALUE || processHandle == NULL)
-		{
-			std::wcout << L"Failed restarting process by id: " << processId << std::endl;
-			return FALSE;
-		}
-
-		//Fix check uiaccess
-		//Fix check adminaccess
-
 		//Get process details
-		std::wstring processApplicationExePath = Process_GetApplicationExePath(processHandle);
-		std::wstring processApplicationWorkPath = Process_GetApplicationParameter(processHandle, CurrentDirectoryPath);
-		std::wstring processApplicationUserModelId = Process_GetApplicationUserModelId(processHandle);
-		std::wstring processApplicationArguments = L"";
-		if (!skipArgs)
-		{
-			processApplicationArguments = Process_GetApplicationParameter(processHandle, CommandLine);
-			CommandLine_RemoveExePath(processApplicationArguments);
-		}
+		__Process_Details processDetails = Process_GetDetails(processId, desiredAccess, TRUE);
 
-		std::wcout << L"Restart ExePath: " << processApplicationExePath << std::endl;
-		std::wcout << L"Restart ApplicationUserModelId: " << processApplicationUserModelId << std::endl;
-		std::wcout << L"Restart WorkPath: " << processApplicationWorkPath << std::endl;
-		std::wcout << L"Restart Arguments: " << processApplicationArguments << std::endl;
-		CloseHandle(processHandle);
+		//Fix overwrite with newarguments
 
-		//Close process
-		Close_ProcessId(processId);
-
-		//Check if uwp application
-		BOOL uwpProcess = !StringW_IsNullOrWhitespace(processApplicationUserModelId);
+		//Close current process
+		Close_ProcessTreeId(processId);
 
 		//Launch process
-		if (uwpProcess)
+		if (processDetails.ProcessType == UWP || processDetails.ProcessType == Win32Store)
 		{
-			Launch_Uwp(processApplicationUserModelId, processApplicationArguments);
+			Launch_Uwp(processDetails.ApplicationUserModelId, processDetails.Argument);
 		}
 		else
 		{
-			Launch_Prepare(processApplicationExePath, processApplicationWorkPath, processApplicationArguments, false, false, false);
+			//Check admin and uiaccess
+			BOOL launchAsAdmin = processAccess.ProcessAdminAccess;
+			BOOL allowUiAccess = processAccess.ProcessUiAccess;
+			Launch_Prepare(processDetails.ExecutablePath, processDetails.WorkPath, processDetails.Argument, false, launchAsAdmin, allowUiAccess);
 		}
 		return TRUE;
 	}

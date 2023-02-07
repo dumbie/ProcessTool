@@ -93,7 +93,7 @@ namespace
 			if (TerminateProcess(process.ProcessHandle, 1))
 			{
 				processClosed = TRUE;
-				std::wcout << L"Found and closed process by name: " << process.ProcessId << "/" << process.ExecutableName << "/" << process.ApplicationUserModelId << std::endl;
+				std::wcout << L"Found and closed process by name: " << process.Identifier << "/" << process.ExecutableName << "/" << process.ApplicationUserModelId << std::endl;
 			}
 			CloseHandle(process.ProcessHandle);
 		}

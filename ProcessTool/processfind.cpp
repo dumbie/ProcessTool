@@ -20,34 +20,23 @@ namespace
 
 		PROCESSENTRY32W processEntry{};
 		processEntry.dwSize = sizeof(PROCESSENTRY32W);
-
 		while (Process32NextW(processSnap, &processEntry))
 		{
-			__Process_Details newProcess{};
+			//Get process details
+			__Process_Details processDetails = Process_GetDetails(processEntry.th32ProcessID, desiredAccess, FALSE);
 
-			HANDLE processHandle = OpenProcess(desiredAccess, FALSE, processEntry.th32ProcessID);
-			if (processHandle != INVALID_HANDLE_VALUE && processHandle != NULL)
+			//Check matching process name
+			std::wstring processNameLower = processName;
+			std::wstring processExecutableNameLower = processDetails.ExecutableName;
+			std::wstring processApplicationUserModelIdLower = processDetails.ApplicationUserModelId;
+			StringW_ToLower(processNameLower);
+			StringW_ToLower(processExecutableNameLower);
+			StringW_ToLower(processApplicationUserModelIdLower);
+			if (processExecutableNameLower == processNameLower || processApplicationUserModelIdLower == processNameLower)
 			{
-				//Get application details
-				std::wstring processApplicationUserModelId = Process_GetApplicationUserModelId(processHandle);
-
-				//Check matching process name
-				std::wstring processExecutableNameLower = processEntry.szExeFile;
-				std::wstring processApplicationUserModelIdLower = processApplicationUserModelId;
-				StringW_ToLower(processExecutableNameLower);
-				StringW_ToLower(processApplicationUserModelIdLower);
-				if (processExecutableNameLower == processName || processApplicationUserModelIdLower == processName)
-				{
-					newProcess.ProcessEntry = processEntry;
-					newProcess.ProcessHandle = processHandle;
-					newProcess.ProcessId = processEntry.th32ProcessID;
-					newProcess.ExecutableName = processEntry.szExeFile;
-					newProcess.ApplicationUserModelId = processApplicationUserModelId;
-					processList.push_back(newProcess);
-				}
+				processList.push_back(processDetails);
 			}
 		}
-
 		CloseHandle(processSnap);
 		return processList;
 	}

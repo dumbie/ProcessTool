@@ -5,6 +5,31 @@
 
 namespace
 {
+	void CommandLine_RemoveExePath(std::wstring& commandLine)
+	{
+		if (StringW_IsNullOrWhitespace(commandLine))
+		{
+			return;
+		}
+
+		BOOL inQuotes = FALSE;
+		const wchar_t* commandLineConst = commandLine.c_str();
+		while (*commandLineConst)
+		{
+			if (*commandLineConst == L'"')
+			{
+				inQuotes = !inQuotes;
+			}
+			else if (!inQuotes && *commandLineConst == L' ')
+			{
+				commandLine = commandLineConst + 1;
+				return;
+			}
+			commandLineConst = CharNextW(commandLineConst);
+		}
+		commandLine = commandLineConst;
+	}
+
 	std::wstring GetApplicationParameter32(HANDLE hProcess, __PROCESS_PARAMETER_OPTIONS pOption)
 	{
 		std::wcout << "GetApplicationParameter architecture 32" << std::endl;
@@ -88,6 +113,13 @@ namespace
 		{
 			std::wcout << "Failed to get parameter string for: " << hProcess << std::endl;
 			return L"";
+		}
+
+		if (pOption == CommandLine)
+		{
+			std::wstring returnString = getString;
+			CommandLine_RemoveExePath(returnString);
+			return returnString;
 		}
 
 		return getString;
@@ -178,6 +210,13 @@ namespace
 			return L"";
 		}
 
+		if (pOption == CommandLine)
+		{
+			std::wstring returnString = getString;
+			CommandLine_RemoveExePath(returnString);
+			return returnString;
+		}
+
 		return getString;
 	}
 
@@ -264,6 +303,13 @@ namespace
 		{
 			std::wcout << "Failed to get parameter string for: " << hProcess << std::endl;
 			return L"";
+		}
+
+		if (pOption == CommandLine)
+		{
+			std::wstring returnString = getString;
+			CommandLine_RemoveExePath(returnString);
+			return returnString;
 		}
 
 		return getString;

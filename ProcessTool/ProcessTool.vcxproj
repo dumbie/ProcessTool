@@ -172,6 +172,7 @@
     <ClCompile Include="processrestart.cpp" />
     <ClCompile Include="processinfo.cpp" />
     <ClCompile Include="processshow.cpp" />
+    <ClCompile Include="processthread.cpp" />
     <ClCompile Include="processwindow.cpp" />
     <ClCompile Include="tokencreate.cpp" />
     <ClCompile Include="tokensid.cpp" />

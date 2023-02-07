@@ -5,43 +5,30 @@
 
 namespace
 {
-	BOOL CALLBACK EnumWindows_Callback(HWND hWnd, __EnumWindows_Params lParam)
+	DWORD Window_GetProcessId(HWND hWindow)
 	{
 		DWORD foundProcessId = 0;
-		GetWindowThreadProcessId(hWnd, &foundProcessId);
+		GetWindowThreadProcessId(hWindow, &foundProcessId);
+		if (foundProcessId <= 0)
+		{
+			//std::wcout << "Process id 0, using GetProcessHandleFromHwnd as backup." << hWindow << std::endl;
 
-		//BOOL windowType = IsWindow(hWnd);
-		//BOOL windowVisible = IsWindowVisible(hWnd);
-		int titleLength = GetWindowTextLengthA(hWnd);
-		BOOL windowOwner = GetWindow(hWnd, GW_OWNER) == (HWND)0;
-		if (lParam.targetProcessId != foundProcessId || !windowOwner || titleLength == 0)
-		{
-			return TRUE;
+			HMODULE hModule = LoadLibraryW(L"oleacc.dll");
+			if (hModule == NULL)
+			{
+				std::wcout << "Failed to get GetModuleHandleW for: " << hWindow << std::endl;
+				return foundProcessId;
+			}
+
+			__GetProcessHandleFromHwnd getProcessHandleFromHwnd = (__GetProcessHandleFromHwnd)GetProcAddress(hModule, "GetProcessHandleFromHwnd");
+			foundProcessId = GetProcessId(getProcessHandleFromHwnd(hWindow));
 		}
-		else
-		{
-			lParam.foundWindowHandle = hWnd;
-			return FALSE;
-		}
+		return foundProcessId;
 	}
 
-	HWND Window_GetHwndByProcessId(DWORD processId)
+	std::wstring Window_GetWindowTitle(HWND hWindow)
 	{
-		__EnumWindows_Params lParam{};
-		lParam.targetProcessId = processId;
-		EnumWindows((WNDENUMPROC)EnumWindows_Callback, (LPARAM)&lParam);
-		return lParam.foundWindowHandle;
-	}
-
-	std::wstring Process_GetApplicationWindowTitle(DWORD processId)
-	{
-		HWND handleWindow = Window_GetHwndByProcessId(processId);
-		if (handleWindow == (HWND)0)
-		{
-			return L"";
-		}
-
-		int stringLength = GetWindowTextLengthA(handleWindow);
+		int stringLength = GetWindowTextLengthA(hWindow);
 		if (stringLength <= 0)
 		{
 			return L"";
@@ -49,7 +36,48 @@ namespace
 
 		stringLength += 1;
 		CHAR* getString = new CHAR[stringLength];
-		GetWindowTextA(handleWindow, getString, stringLength);
+		GetWindowTextA(hWindow, getString, stringLength);
 		return String_Convert_to_StringW(getString);
+	}
+
+	std::wstring Window_GetClassName(HWND hWindow)
+	{
+		int stringLength = 1024;
+		WCHAR* getString = new WCHAR[stringLength]{};
+		GetClassNameW(hWindow, getString, stringLength);
+		return getString;
+	}
+
+	BOOL CALLBACK EnumWindows_Callback(HWND hWindow, __EnumWindows_Params lParam)
+	{
+		//Get process id
+		DWORD foundProcessId = Window_GetProcessId(hWindow);
+		if (foundProcessId <= 0)
+		{
+			return TRUE;
+		}
+
+		//Get main window handle
+		//BOOL windowType = IsWindow(hWindow);
+		BOOL windowVisible = IsWindowVisible(hWindow);
+		//int titleLength = GetWindowTextLengthA(hWindow);
+		BOOL windowOwner = GetWindow(hWindow, GW_OWNER) == (HWND)0;
+		if (lParam.targetProcessId != foundProcessId || !windowOwner || !windowVisible)
+		{
+			return TRUE;
+		}
+		else
+		{
+			lParam.foundWindowHandle = hWindow;
+			return FALSE;
+		}
+	}
+
+	HWND Window_GetMainWindowByProcessId(DWORD processId)
+	{
+		__EnumWindows_Params lParam{};
+		lParam.targetProcessId = processId;
+		EnumWindows((WNDENUMPROC)EnumWindows_Callback, (LPARAM)&lParam);
+		return lParam.foundWindowHandle;
 	}
 }

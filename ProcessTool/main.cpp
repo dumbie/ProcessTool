@@ -3,6 +3,7 @@
 #include "processclose.cpp"
 #include "processlaunch.cpp"
 #include "processrestart.cpp"
+#include "processshow.cpp"
 
 namespace
 {
@@ -46,6 +47,13 @@ namespace
 		//argv[2] = String_Convert_to_LPWSTR("-pid=1000");
 		//argv[3] = String_Convert_to_LPWSTR("-skipargs");
 
+		//Debug launch arguments (Show process)
+		//argc = 3;
+		//argv = new wchar_t* [3];
+		//argv[1] = String_Convert_to_LPWSTR("-show");
+		//argv[2] = String_Convert_to_LPWSTR("-pid=1000");
+		//argv[3] = String_Convert_to_LPWSTR("-hwnd=1000");
+
 		//Check launch arguments
 		if (argc < 2)
 		{
@@ -53,7 +61,7 @@ namespace
 			std::wcout << L"Launch executable: ProcessTool -exepath=""\"C:\\Windows\\System32\\Notepad.exe""\" [opt: -workpath=""\"C:\\Windows\\System32""\"] [opt: -args=""\"Textfile.txt""\"] [opt: -normal or -admin] [opt: -allowuiaccess]" << std::endl;
 			std::wcout << L"Launch Windows Store: ProcessTool -uwp=""\"Microsoft.WindowsNotepad_8wekyb3d8bbwe!App""\" [opt: -args=""\"Textfile.txt""\"]" << std::endl;
 			std::wcout << L"Close: ProcessTool -close -pid=1000 or -pname=""\"Notepad.exe""\" or -pname=""\"Microsoft.WindowsNotepad_8wekyb3d8bbwe!App""\"" << std::endl;
-			std::wcout << L"Restart: ProcessTool -restart -pid=1000 [opt: -skipargs]" << std::endl;
+			std::wcout << L"Restart: ProcessTool -restart -pid=1000 [opt: -skipargs] [opt: -args=""\"Textfile.txt""\"]" << std::endl;
 			std::wcout << L"Show: ProcessTool -show -pid=1000" << std::endl;
 			Console_WaitForInput();
 			return 0;
@@ -73,6 +81,7 @@ namespace
 		BOOL argumentAllowUiAccess = FALSE;
 		BOOL argumentClose = FALSE;
 		BOOL argumentRestart = FALSE;
+		BOOL argumentShow = FALSE;
 		BOOL argumentSkipArgs = FALSE;
 		for (int i = 1; i < argc; i++)
 		{
@@ -155,6 +164,11 @@ namespace
 				argumentRestart = TRUE;
 			}
 
+			if (std::wstring(argument).starts_with(L"-show"))
+			{
+				argumentShow = TRUE;
+			}
+
 			if (std::wstring(argument).starts_with(L"-skipargs"))
 			{
 				argumentSkipArgs = TRUE;
@@ -174,7 +188,7 @@ namespace
 		{
 			if (!StringW_IsNullOrWhitespace(argumentpId))
 			{
-				Close_ProcessId(StringW_Convert_to_DWORD(argumentpId));
+				Close_ProcessTreeId(StringW_Convert_to_DWORD(argumentpId));
 			}
 			else if (!StringW_IsNullOrWhitespace(argumentpName))
 			{
@@ -185,7 +199,14 @@ namespace
 		{
 			if (!StringW_IsNullOrWhitespace(argumentpId))
 			{
-				Restart_ProcessId(StringW_Convert_to_DWORD(argumentpId), argumentSkipArgs);
+				Restart_ProcessId(StringW_Convert_to_DWORD(argumentpId), argumentSkipArgs, argumentArgs);
+			}
+		}
+		else if (argumentShow)
+		{
+			if (!StringW_IsNullOrWhitespace(argumentpId))
+			{
+				Show_ProcessId(StringW_Convert_to_DWORD(argumentpId));
 			}
 		}
 		else
