@@ -103,6 +103,7 @@ namespace
 		//Get application details
 		HWND processMainWindowHandle = Window_GetMainWindowByProcessId(processId);
 		std::wstring processMainWindowClass = Window_GetClassName(processMainWindowHandle);
+		std::wstring processMainWindowTitle = Window_GetWindowTitle(processMainWindowHandle);
 		std::wstring processExecutableName = Process_GetApplicationExeName(processHandle);
 		std::wstring processExecutablePath = Process_GetApplicationExePath(processHandle);
 		std::wstring processApplicationUserModelId = Process_GetApplicationUserModelId(processHandle);
@@ -127,6 +128,7 @@ namespace
 			if (processMainWindowClass == L"ApplicationFrameWindow" || processMainWindowClass == L"Windows.UI.Core.CoreWindow")
 			{
 				newProcess.ProcessType = UWP;
+				processMainWindowHandle = Window_GetAppUserModelIdWindow(processApplicationUserModelId);
 			}
 			else
 			{
@@ -143,6 +145,7 @@ namespace
 		newProcess.ProcessHandle = processHandle;
 		newProcess.MainWindowHandle = processMainWindowHandle;
 		newProcess.MainWindowClassName = processMainWindowClass;
+		newProcess.MainWindowTitle = processMainWindowTitle;
 		newProcess.ExecutableName = processExecutableName;
 		newProcess.ExecutablePath = processExecutablePath;
 		newProcess.ApplicationUserModelId = processApplicationUserModelId;
@@ -154,6 +157,7 @@ namespace
 		std::wcout << L"ProcessHandle: " << newProcess.ProcessHandle << std::endl;
 		std::wcout << L"MainWindowHandle: " << newProcess.MainWindowHandle << std::endl;
 		std::wcout << L"MainWindowClassName: " << newProcess.MainWindowClassName << std::endl;
+		std::wcout << L"MainWindowTitle: " << newProcess.MainWindowTitle << std::endl;
 		std::wcout << L"ExecutableName: " << newProcess.ExecutableName << std::endl;
 		std::wcout << L"ExecutablePath: " << newProcess.ExecutablePath << std::endl;
 		std::wcout << L"ApplicationUserModelId: " << newProcess.ApplicationUserModelId << std::endl;

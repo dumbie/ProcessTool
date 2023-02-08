@@ -38,7 +38,12 @@ namespace
 		//Get process details
 		__Process_Details processDetails = Process_GetDetails(processId, desiredAccess, TRUE);
 
-		//Fix overwrite with newarguments
+		//Check launch argument
+		std::wstring launchArgument = newArgs;
+		if (StringW_IsNullOrWhitespace(launchArgument))
+		{
+			launchArgument = processDetails.Argument;
+		}
 
 		//Close current process
 		Close_ProcessTreeId(processId);
@@ -46,14 +51,14 @@ namespace
 		//Launch process
 		if (processDetails.ProcessType == UWP || processDetails.ProcessType == Win32Store)
 		{
-			Launch_Uwp(processDetails.ApplicationUserModelId, processDetails.Argument);
+			Launch_Uwp(processDetails.ApplicationUserModelId, launchArgument);
 		}
 		else
 		{
 			//Check admin and uiaccess
 			BOOL launchAsAdmin = processAccess.ProcessAdminAccess;
 			BOOL allowUiAccess = processAccess.ProcessUiAccess;
-			Launch_Prepare(processDetails.ExecutablePath, processDetails.WorkPath, processDetails.Argument, false, launchAsAdmin, allowUiAccess);
+			Launch_Prepare(processDetails.ExecutablePath, processDetails.WorkPath, launchArgument, false, launchAsAdmin, allowUiAccess);
 		}
 		return TRUE;
 	}
