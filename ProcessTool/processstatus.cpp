@@ -1,6 +1,6 @@
 #pragma once
-#include "includes.cpp"
-#include "defines.cpp"
+#include "includes.h"
+#include "defines.h"
 #include "tokencreate.cpp"
 
 namespace

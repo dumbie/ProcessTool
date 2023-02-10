@@ -1,7 +1,7 @@
 #pragma once
-#include "includes.cpp"
-#include "defines.cpp"
-#include "string.cpp"
+#include "includes.h"
+#include "defines.h"
+#include "strings.h"
 #include "processwindow.cpp"
 #include "processparameter.cpp"
 
@@ -125,10 +125,10 @@ namespace
 		//Check if process is UWP or Win32Store
 		if (!StringW_IsNullOrWhitespace(processApplicationUserModelId))
 		{
-			if (processMainWindowClass == L"ApplicationFrameWindow" || processMainWindowClass == L"Windows.UI.Core.CoreWindow")
+			if (processMainWindowClass == L"" || processMainWindowClass == L"ApplicationFrameWindow" || processMainWindowClass == L"Windows.UI.Core.CoreWindow")
 			{
 				newProcess.ProcessType = UWP;
-				processMainWindowHandle = Window_GetAppUserModelIdWindow(processApplicationUserModelId);
+				processMainWindowHandle = Window_GetUwpWindowByAppUserModelId(processApplicationUserModelId);
 			}
 			else
 			{

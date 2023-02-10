@@ -1,5 +1,5 @@
 #pragma once
-#include "includes.cpp"
+#include "includes.h"
 
 namespace
 {
@@ -34,6 +34,12 @@ namespace
 		HWND foundWindowHandle;
 	};
 
+	struct __Process_Handle
+	{
+		DWORD Identifier;
+		HANDLE ProcessHandle;
+	};
+
 	struct __Process_Details
 	{
 		DWORD Identifier;
@@ -41,6 +47,7 @@ namespace
 		__Process_Types ProcessType;
 		HWND MainWindowHandle;
 		std::wstring MainWindowClassName;
+		std::wstring MainWindowTitle;
 		std::wstring ApplicationUserModelId;
 		std::wstring ExecutableName;
 		std::wstring ExecutablePath;

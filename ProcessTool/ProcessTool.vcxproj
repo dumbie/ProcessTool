@@ -161,8 +161,6 @@
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="defines.cpp" />
-    <ClCompile Include="includes.cpp" />
     <ClCompile Include="processclose.cpp" />
     <ClCompile Include="processfind.cpp" />
     <ClCompile Include="processlaunch.cpp" />
@@ -170,22 +168,27 @@
     <ClCompile Include="processparameter.cpp" />
     <ClCompile Include="processprepare.cpp" />
     <ClCompile Include="processrestart.cpp" />
-    <ClCompile Include="processinfo.cpp" />
+    <ClCompile Include="processdetails.cpp" />
     <ClCompile Include="processshow.cpp" />
     <ClCompile Include="processthread.cpp" />
     <ClCompile Include="processwindow.cpp" />
     <ClCompile Include="tokencreate.cpp" />
     <ClCompile Include="tokensid.cpp" />
-    <ClCompile Include="string.cpp" />
     <ClCompile Include="tokenadjust.cpp" />
     <ClCompile Include="processstatus.cpp" />
-    <ClCompile Include="variables.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="AssemblyInfo.rc" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="AppIcon.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="defines.h" />
+    <ClInclude Include="headers.h" />
+    <ClInclude Include="includes.h" />
+    <ClInclude Include="strings.h" />
+    <ClInclude Include="variables.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

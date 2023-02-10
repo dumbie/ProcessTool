@@ -1,7 +1,7 @@
 #pragma once
-#include "includes.cpp"
-#include "defines.cpp"
-#include "string.cpp"
+#include "includes.h"
+#include "defines.h"
+#include "strings.h"
 
 namespace
 {

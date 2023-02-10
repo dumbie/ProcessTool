@@ -24,12 +24,6 @@
     <ClCompile Include="tokensid.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="string.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="variables.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="tokenadjust.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -45,7 +39,7 @@
     <ClCompile Include="processclose.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="processinfo.cpp">
+    <ClCompile Include="processdetails.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="processwindow.cpp">
@@ -57,13 +51,7 @@
     <ClCompile Include="processfind.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="includes.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="processstatus.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="defines.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="processparameter.cpp">
@@ -82,5 +70,22 @@
     <Image Include="AppIcon.ico">
       <Filter>Resource Files</Filter>
     </Image>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="defines.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="strings.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="variables.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="includes.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="headers.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

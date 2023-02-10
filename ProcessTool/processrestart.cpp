@@ -1,6 +1,6 @@
 #pragma once
-#include "includes.cpp"
-#include "variables.cpp"
+#include "includes.h"
+#include "variables.h"
 #include "processparameter.cpp"
 #include "processclose.cpp"
 #include "processlaunch.cpp"

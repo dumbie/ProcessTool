@@ -1,5 +1,5 @@
 #pragma once
-#include "includes.cpp"
+#include "includes.h"
 #include "processfind.cpp"
 
 namespace
@@ -36,7 +36,7 @@ namespace
 
 		//Terminate child processes
 		PROCESSENTRY32W processEntry{};
-		processEntry.dwSize = sizeof(PROCESSENTRY32W);
+		processEntry.dwSize = sizeof(processEntry);
 		while (Process32NextW(processSnap, &processEntry))
 		{
 			if (processEntry.th32ParentProcessID == processId)
@@ -63,15 +63,15 @@ namespace
 		return TRUE;
 	}
 
-	BOOL Close_ProcessMessageHwnd(HWND windowHandle)
+	BOOL Close_ProcessMessageHwnd(HWND hWindow)
 	{
-		std::wcout << L"Closing process by window message: " << windowHandle << std::endl;
+		std::wcout << L"Closing process by window message: " << hWindow << std::endl;
 
-		LRESULT resultClose = SendMessageW(windowHandle, WM_CLOSE, 0, 0);
-		LRESULT resultQuit = SendMessageW(windowHandle, WM_QUIT, 0, 0);
+		LRESULT resultClose = SendMessageW(hWindow, WM_CLOSE, 0, 0);
+		LRESULT resultQuit = SendMessageW(hWindow, WM_QUIT, 0, 0);
 
 		BOOL processClosed = (resultClose == CB_ERR || resultClose == LB_ERRSPACE) && (resultQuit == CB_ERR || resultQuit == LB_ERRSPACE);
-		std::wcout << L"Closed process by window message: " << windowHandle << "/" << processClosed << std::endl;
+		std::wcout << L"Closed process by window message: " << hWindow << "/" << processClosed << std::endl;
 		return processClosed;
 	}
 
@@ -79,8 +79,7 @@ namespace
 	{
 		std::wcout << L"Closing processes by name: " << processName << std::endl;
 
-		std::vector<__Process_Details> foundProcesses = Find_ProcessesName(processName, PROCESS_QUERY_LIMITED_INFORMATION | PROCESS_TERMINATE);
-
+		std::vector<__Process_Handle> foundProcesses = Find_ProcessesName(processName, PROCESS_QUERY_LIMITED_INFORMATION | PROCESS_TERMINATE);
 		if (foundProcesses.size() == 0)
 		{
 			std::wcout << L"No process found to close by name: " << processName << std::endl;
@@ -88,12 +87,12 @@ namespace
 		}
 
 		BOOL processClosed = FALSE;
-		for (__Process_Details& process : foundProcesses)
+		for (__Process_Handle& process : foundProcesses)
 		{
 			if (TerminateProcess(process.ProcessHandle, 1))
 			{
 				processClosed = TRUE;
-				std::wcout << L"Found and closed process by name: " << process.Identifier << "/" << process.ExecutableName << "/" << process.ApplicationUserModelId << std::endl;
+				std::wcout << L"Found and closed process by name: " << process.Identifier << "/" << process.ProcessHandle << "/" << processName << std::endl;
 			}
 			CloseHandle(process.ProcessHandle);
 		}

@@ -1,5 +1,5 @@
 #pragma once
-#include "includes.cpp"
+#include "includes.h"
 #include "processclose.cpp"
 #include "processlaunch.cpp"
 #include "processrestart.cpp"
@@ -52,7 +52,7 @@ namespace
 		//argv = new wchar_t* [3];
 		//argv[1] = String_Convert_to_LPWSTR("-show");
 		//argv[2] = String_Convert_to_LPWSTR("-pid=1000");
-		//argv[3] = String_Convert_to_LPWSTR("-hwnd=1000");
+		//argv[2] = String_Convert_to_LPWSTR("-hwnd=1000");
 
 		//Check launch arguments
 		if (argc < 2)

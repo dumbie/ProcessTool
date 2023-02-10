@@ -1,7 +1,9 @@
 #pragma once
-#include "includes.cpp"
-#include "string.cpp"
-#include "defines.cpp"
+#include "includes.h"
+#include "strings.h"
+#include "defines.h"
+#include "headers.h"
+#include "processthread.cpp"
 
 namespace
 {
@@ -28,16 +30,16 @@ namespace
 
 	std::wstring Window_GetWindowTitle(HWND hWindow)
 	{
-		int stringLength = GetWindowTextLengthA(hWindow);
+		int stringLength = GetWindowTextLengthW(hWindow);
 		if (stringLength <= 0)
 		{
 			return L"";
 		}
 
 		stringLength += 1;
-		CHAR* getString = new CHAR[stringLength];
-		GetWindowTextA(hWindow, getString, stringLength);
-		return String_Convert_to_StringW(getString);
+		WCHAR* getString = new WCHAR[stringLength];
+		GetWindowTextW(hWindow, getString, stringLength);
+		return getString;
 	}
 
 	std::wstring Window_GetClassName(HWND hWindow)
@@ -46,6 +48,27 @@ namespace
 		WCHAR* getString = new WCHAR[stringLength]{};
 		GetClassNameW(hWindow, getString, stringLength);
 		return getString;
+	}
+
+	std::wstring Window_GetAppUserModelId(HWND hWindow)
+	{
+		IPropertyStore* propertyStore = NULL;
+		HRESULT hResult = SHGetPropertyStoreForWindow(hWindow, IID_IPropertyStore, (void**)&propertyStore);
+		if (FAILED(hResult) || propertyStore == NULL)
+		{
+			return L"";
+		}
+
+		PROPVARIANT propertyVariant;
+		hResult = propertyStore->GetValue(PKEY_AppUserModel_ID, &propertyVariant);
+		if (FAILED(hResult))
+		{
+			return L"";
+		}
+
+		std::wstring propertyString = propertyVariant.pwszVal;
+		PropVariantClear(&propertyVariant);
+		return propertyString;
 	}
 
 	BOOL CALLBACK EnumWindows_Callback(HWND hWindow, __EnumWindows_Params lParam)
@@ -79,5 +102,69 @@ namespace
 		lParam.targetProcessId = processId;
 		EnumWindows((WNDENUMPROC)EnumWindows_Callback, (LPARAM)&lParam);
 		return lParam.foundWindowHandle;
+	}
+
+	HWND Window_GetUwpWindowByAppUserModelId(std::wstring appUserModelId)
+	{
+		std::wcout << L"Looking for UWP window handle in frame host." << std::endl;
+
+		//Get ApplicationFrameHost process handle
+		std::vector<__Process_Handle> foundProcesses = Find_ProcessesName(L"ApplicationFrameHost.exe", PROCESS_QUERY_LIMITED_INFORMATION);
+		if (foundProcesses.size() == 0)
+		{
+			std::wcout << L"No ApplicationFrameHost process found." << appUserModelId << std::endl;
+			return (HWND)0;
+		}
+		__Process_Handle processApplicationFrameHost = foundProcesses.front();
+
+		//Get ApplicationFrameHost process threads
+		std::vector<DWORD> processThreadIds = Thread_GetProcessThreadIds(processApplicationFrameHost.Identifier);
+		if (foundProcesses.size() == 0)
+		{
+			std::wcout << L"No process threads found." << appUserModelId << std::endl;
+			return (HWND)0;
+		}
+
+		//Loop through threads to get window
+		for (DWORD& processThreadId : processThreadIds)
+		{
+			std::wcout << L"Process thread id: " << processThreadId << std::endl;
+
+			std::vector<HWND> threadWindows = Thread_GetThreadWindowHandles(processThreadId);
+			if (threadWindows.size() == 0)
+			{
+				std::wcout << L"Process thread has no windows: " << processThreadId << std::endl;
+				continue;
+			}
+
+			HWND uwpWindowHandle{};
+			BOOL uwpApplicationFrame = FALSE;
+			BOOL uwpUserInterface = FALSE;
+			for (HWND& threadWindowHandle : threadWindows)
+			{
+				std::wstring processMainWindowClass = Window_GetClassName(threadWindowHandle);
+				if (processMainWindowClass == L"ApplicationFrameWindow")
+				{
+					uwpWindowHandle = threadWindowHandle;
+					uwpApplicationFrame = true;
+				}
+				else if (processMainWindowClass == L"MSCTFIME UI")
+				{
+					uwpUserInterface = true;
+				}
+			}
+
+			if (uwpApplicationFrame && uwpUserInterface)
+			{
+				std::wstring uwpAppUserModelId = Window_GetAppUserModelId(uwpWindowHandle);
+				if (uwpAppUserModelId == appUserModelId)
+				{
+					std::wcout << L"Process uwp thread window: " << uwpWindowHandle << "/" << appUserModelId << std::endl;
+					return uwpWindowHandle;
+				}
+			}
+		}
+
+		return (HWND)0;
 	}
 }

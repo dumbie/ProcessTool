@@ -1,11 +1,11 @@
 #pragma once
-#include "includes.cpp"
+#include "includes.h"
 #include "processlaunch.cpp"
-#include "string.cpp"
+#include "strings.h"
 #include "tokenadjust.cpp"
 #include "tokencreate.cpp"
 #include "tokensid.cpp"
-#include "variables.cpp"
+#include "variables.h"
 
 namespace
 {

@@ -1,7 +1,7 @@
 #pragma once
-#include "includes.cpp"
+#include "includes.h"
 #include "processwindow.cpp"
-#include "processinfo.cpp"
+#include "processdetails.cpp"
 
 namespace
 {
@@ -48,28 +48,16 @@ namespace
 		std::wcout << L"Showing process by id: " << processId << std::endl;
 
 		//Get process details
-		HWND processHwnd = 0;
 		__Process_Details processDetails = Process_GetDetails(processId, PROCESS_QUERY_LIMITED_INFORMATION, TRUE);
-
-		//Check if process is uwp application
-		if (processDetails.ProcessType == UWP)
-		{
-			std::wcout << L"Show application is UWP, looking for frame host." << std::endl;
-			//Fix add code to look for window in frame host.
-		}
-		else
-		{
-			processHwnd = processDetails.MainWindowHandle;
-		}
 		
 		//Check window handle
-		if (processHwnd == (HWND)0)
+		if (processDetails.MainWindowHandle == (HWND)0)
 		{
 			std::wcout << L"Failed showing process by id: " << processId << std::endl;
 			return FALSE;
 		}
 
 		//Show process main window
-		return Show_ProcessHwnd(processId, processHwnd);
+		return Show_ProcessHwnd(processId, processDetails.MainWindowHandle);
 	}
 }

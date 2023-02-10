@@ -7,6 +7,7 @@
 #include <regex>
 #include <conio.h>
 #include <ShObjIdl.h>
+#include <propkey.h>
 #include <tlhelp32.h>
 #include <appmodel.h>
 #include <winternl.h>
