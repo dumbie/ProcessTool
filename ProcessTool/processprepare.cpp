@@ -14,17 +14,27 @@ namespace
 		//Check required process action
 		BOOL launchShellExecute = TRUE;
 		BOOL launchUnelevated = FALSE;
-		if (asAdmin)
+
+		//Check for shell command
+		if (StringW_Contains(exePath, L":/") || StringW_Contains(exePath, L":\\"))
 		{
-			std::wcout << L"Starting process as administrator." << std::endl;
+			std::wcout << L"Shell launch command detected." << std::endl;
+			asAdmin = FALSE;
 		}
-		else if (asNormal)
+		else
 		{
-			std::wcout << L"Starting process as normal user." << std::endl;
-			if (vToolAdminAccess)
+			if (asAdmin)
 			{
-				launchShellExecute = FALSE;
-				launchUnelevated = TRUE;
+				std::wcout << L"Starting process as administrator." << std::endl;
+			}
+			else if (asNormal)
+			{
+				std::wcout << L"Starting process as normal user." << std::endl;
+				if (vToolAdminAccess)
+				{
+					launchShellExecute = FALSE;
+					launchUnelevated = TRUE;
+				}
 			}
 		}
 
