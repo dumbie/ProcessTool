@@ -70,7 +70,7 @@ namespace
 		LRESULT resultClose = SendMessageW(hWindow, WM_CLOSE, 0, 0);
 		LRESULT resultQuit = SendMessageW(hWindow, WM_QUIT, 0, 0);
 
-		BOOL processClosed = (resultClose == CB_ERR || resultClose == LB_ERRSPACE) && (resultQuit == CB_ERR || resultQuit == LB_ERRSPACE);
+		BOOL processClosed = !((resultClose == CB_ERR || resultClose == LB_ERRSPACE) && (resultQuit == CB_ERR || resultQuit == LB_ERRSPACE));
 		std::wcout << L"Closed process by window message: " << hWindow << "/" << processClosed << std::endl;
 		return processClosed;
 	}

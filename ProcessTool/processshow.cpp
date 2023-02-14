@@ -5,9 +5,9 @@
 
 namespace
 {
-	BOOL Show_ProcessHwnd(DWORD processId, HWND processHwnd)
+	BOOL Show_ProcessIdHwnd(DWORD processId, HWND processHwnd)
 	{
-		std::wcout << L"Showing process window handle: " << processHwnd << std::endl;
+		std::wcout << L"Showing process window handle: " << processId << "/" << processHwnd << std::endl;
 
 		//Fix Close open Windows prompts
 		//Fix Close open start menu, cortana or search
@@ -43,13 +43,24 @@ namespace
 		return TRUE;
 	}
 
+	BOOL Show_ProcessHwnd(HWND processHwnd)
+	{
+		std::wcout << L"Showing process by hwnd: " << processHwnd << std::endl;
+
+		//Get process id from window handle
+		DWORD foundProcessId = 0;
+		GetWindowThreadProcessId(processHwnd, &foundProcessId);
+
+		return Show_ProcessIdHwnd(foundProcessId, processHwnd);
+	}
+
 	BOOL Show_ProcessId(DWORD processId)
 	{
 		std::wcout << L"Showing process by id: " << processId << std::endl;
 
 		//Get process details
 		__Process_Details processDetails = Process_GetDetails(processId, PROCESS_QUERY_LIMITED_INFORMATION, TRUE);
-		
+
 		//Check window handle
 		if (processDetails.MainWindowHandle == (HWND)0)
 		{
@@ -58,6 +69,6 @@ namespace
 		}
 
 		//Show process main window
-		return Show_ProcessHwnd(processId, processDetails.MainWindowHandle);
+		return Show_ProcessIdHwnd(processId, processDetails.MainWindowHandle);
 	}
 }

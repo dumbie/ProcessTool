@@ -185,6 +185,16 @@ namespace
 		return newString;
 	}
 
+	HWND String_Convert_to_HWND(std::string targetString)
+	{
+		return (HWND)stoll(targetString);
+	}
+
+	HWND StringW_Convert_to_HWND(std::wstring targetString)
+	{
+		return (HWND)stoll(targetString);
+	}
+
 	std::string StringW_Convert_to_String(std::wstring targetString)
 	{
 		//Check string length
