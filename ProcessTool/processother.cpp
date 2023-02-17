@@ -4,6 +4,11 @@
 
 namespace
 {
+	void Thread_Sleep(int milliSeconds)
+	{
+		std::this_thread::sleep_for(std::chrono::milliseconds(milliSeconds));
+	}
+
 	BOOL Check_PathShellCommand(std::wstring targetPath)
 	{
 		BOOL dividerPosition = targetPath.find(L":") > 1;
@@ -15,5 +20,11 @@ namespace
 	{
 		std::filesystem::path filePath(targetPath);
 		return filePath.filename();
+	}
+
+	std::wstring Convert_ExePathToWorkPath(std::wstring targetPath)
+	{
+		std::filesystem::path filePath(targetPath);
+		return filePath.parent_path();
 	}
 }

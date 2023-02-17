@@ -28,8 +28,9 @@ namespace
 		}
 		else
 		{
-			std::wcout << L"Workpath is empty, using exepath." << std::endl;
-			//Fix check empty workpath get path from exepath
+			std::wstring exeWorkPath = Convert_ExePathToWorkPath(exePath);
+			currentDirectoryLaunch = exeWorkPath.c_str();
+			std::wcout << L"Workpath is empty, using exepath: " << currentDirectoryLaunch << std::endl;
 		}
 
 		if (vToolElevation)
@@ -91,8 +92,9 @@ namespace
 			}
 			else
 			{
-				std::wcout << L"Workpath is empty, using exepath." << std::endl;
-				//Fix check empty workpath get path from exepath
+				std::wstring exeWorkPath = Convert_ExePathToWorkPath(exePath);
+				shellExecuteInfo.lpDirectory = exeWorkPath.c_str();
+				std::wcout << L"Workpath is empty, using exepath: " << shellExecuteInfo.lpDirectory << std::endl;
 			}
 		}
 

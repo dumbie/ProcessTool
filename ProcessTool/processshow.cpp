@@ -8,11 +8,11 @@ namespace
 {
 	BOOL Show_ProcessIdHwnd(DWORD processId, HWND processHwnd)
 	{
-		std::wcout << L"Showing process window handle: " << processId << "/" << processHwnd << std::endl;
+		std::wcout << L"Showing process by id and window handle: " << processId << "/" << processHwnd << std::endl;
 
 		//Close open Windows prompts
-		Close_ProcessesName(L"consent.exe");
-		Close_ProcessesName(L"fondue.exe");
+		Close_ProcessName(L"consent.exe");
+		Close_ProcessName(L"fondue.exe");
 
 		//Get current window placement
 		WINDOWPLACEMENT windowPlacement{};
@@ -46,7 +46,7 @@ namespace
 
 	BOOL Show_ProcessHwnd(HWND processHwnd)
 	{
-		std::wcout << L"Showing process by hwnd: " << processHwnd << std::endl;
+		std::wcout << L"Showing process by window handle: " << processHwnd << std::endl;
 
 		//Get process id from window handle
 		DWORD foundProcessId = 0;

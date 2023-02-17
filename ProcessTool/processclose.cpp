@@ -64,21 +64,9 @@ namespace
 		return processClosed;
 	}
 
-	BOOL Close_ProcessMessageHwnd(HWND hWindow)
+	BOOL Close_ProcessName(std::wstring processName)
 	{
-		std::wcout << L"Closing process by window message: " << hWindow << std::endl;
-
-		LRESULT resultClose = SendMessageW(hWindow, WM_CLOSE, 0, 0);
-		LRESULT resultQuit = SendMessageW(hWindow, WM_QUIT, 0, 0);
-
-		BOOL processClosed = !((resultClose == CB_ERR || resultClose == LB_ERRSPACE) && (resultQuit == CB_ERR || resultQuit == LB_ERRSPACE));
-		std::wcout << L"Closed process by window message: " << hWindow << "/" << processClosed << std::endl;
-		return processClosed;
-	}
-
-	BOOL Close_ProcessesName(std::wstring processName)
-	{
-		std::wcout << L"Closing processes by name: " << processName << std::endl;
+		std::wcout << L"Closing process by name: " << processName << std::endl;
 
 		std::vector<__Process_Handle> foundProcesses = Find_ProcessesName(processName, PROCESS_QUERY_LIMITED_INFORMATION | PROCESS_TERMINATE);
 		if (foundProcesses.size() == 0)
@@ -98,6 +86,20 @@ namespace
 			CloseHandle(process.ProcessHandle);
 		}
 
+		return processClosed;
+	}
+
+	BOOL Close_ProcessMessageHwnd(HWND hWindow)
+	{
+		std::wcout << L"Closing process by window message: " << hWindow << std::endl;
+
+		//Fix show window before sending message, uwp requires this
+
+		LRESULT resultClose = SendMessageW(hWindow, WM_CLOSE, 0, 0);
+		LRESULT resultQuit = SendMessageW(hWindow, WM_QUIT, 0, 0);
+
+		BOOL processClosed = !((resultClose == CB_ERR || resultClose == LB_ERRSPACE) && (resultQuit == CB_ERR || resultQuit == LB_ERRSPACE));
+		std::wcout << L"Closed process by window message: " << hWindow << "/" << processClosed << std::endl;
 		return processClosed;
 	}
 }

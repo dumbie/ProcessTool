@@ -31,7 +31,7 @@ namespace
 		}
 
 		//Filter launch arguments
-		std::wstring argumentUWPAppId = L"";
+		std::wstring argumentUWPAppUserModelId = L"";
 		std::wstring argumentExePath = L"";
 		std::wstring argumentWorkPath = L"";
 		std::wstring argumentArgs = L"";
@@ -99,9 +99,9 @@ namespace
 			if (std::wstring(argument).starts_with(L"-uwp="))
 			{
 				argumentUWP = TRUE;
-				argumentUWPAppId = argument;
-				StringW_Replace(argumentUWPAppId, L"-uwp=", L"");
-				StringW_Replace(argumentUWPAppId, L"\"", L"");
+				argumentUWPAppUserModelId = argument;
+				StringW_Replace(argumentUWPAppUserModelId, L"-uwp=", L"");
+				StringW_Replace(argumentUWPAppUserModelId, L"\"", L"");
 			}
 
 			if (std::wstring(argument).starts_with(L"-normal"))
@@ -162,13 +162,13 @@ namespace
 			{
 				returnValue = Close_ProcessTreeId(StringW_Convert_to_DWORD(argumentpId));
 			}
+			else if (!StringW_IsNullOrWhitespace(argumentpName))
+			{
+				returnValue = Close_ProcessName(argumentpName);
+			}
 			else if (!StringW_IsNullOrWhitespace(argumentHWND))
 			{
 				returnValue = Close_ProcessMessageHwnd(StringW_Convert_to_HWND(argumentHWND));
-			}
-			else if (!StringW_IsNullOrWhitespace(argumentpName))
-			{
-				returnValue = Close_ProcessesName(argumentpName);
 			}
 		}
 		else if (argumentRestart)
@@ -180,7 +180,11 @@ namespace
 		}
 		else if (argumentShow)
 		{
-			if (!StringW_IsNullOrWhitespace(argumentpId))
+			if (!StringW_IsNullOrWhitespace(argumentpId) && !StringW_IsNullOrWhitespace(argumentHWND))
+			{
+				returnValue = Show_ProcessIdHwnd(StringW_Convert_to_DWORD(argumentpId), StringW_Convert_to_HWND(argumentHWND));
+			}
+			else if (!StringW_IsNullOrWhitespace(argumentpId))
 			{
 				returnValue = Show_ProcessId(StringW_Convert_to_DWORD(argumentpId));
 			}
@@ -193,13 +197,13 @@ namespace
 		{
 			if (argumentUWP)
 			{
-				if (StringW_IsNullOrWhitespace(argumentUWPAppId))
+				if (StringW_IsNullOrWhitespace(argumentUWPAppUserModelId))
 				{
-					std::wcout << L"Windows application id not set." << std::endl;
+					std::wcout << L"Windows application user model id not set." << std::endl;
 				}
 				else
 				{
-					returnValue = Launch_Uwp(argumentUWPAppId, argumentArgs);
+					returnValue = Launch_Uwp(argumentUWPAppUserModelId, argumentArgs);
 				}
 			}
 			else

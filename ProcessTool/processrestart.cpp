@@ -48,6 +48,9 @@ namespace
 		//Close current process
 		Close_ProcessTreeId(processId);
 
+		//Wait for process to have closed
+		Thread_Sleep(500);
+
 		//Launch process
 		if (processDetails.ProcessType == UWP || processDetails.ProcessType == Win32Store)
 		{

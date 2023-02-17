@@ -25,6 +25,9 @@ namespace
 			HANDLE processHandle = OpenProcess(desiredAccess, FALSE, processEntry.th32ProcessID);
 			if (processHandle != INVALID_HANDLE_VALUE && processHandle != NULL)
 			{
+				//Fix convert path to filename
+				//Fix remove file extension from filename
+				//Fix GetFileNameWithoutExtension
 				//Check matching process name
 				std::wstring processNameLower = processName;
 				std::wstring processExecutableNameLower = processEntry.szExeFile;
