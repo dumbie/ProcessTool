@@ -60,6 +60,9 @@
     <ClCompile Include="processthread.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="processother.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="AssemblyInfo.rc">

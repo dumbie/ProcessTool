@@ -2,10 +2,11 @@
 #include "includes.h"
 #include "strings.h"
 #include "variables.h"
+#include "processother.cpp"
 
 namespace
 {
-	BOOL Launch_CreateProcess(std::wstring exePath, std::wstring workPath, std::wstring arguments, HANDLE hToken)
+	int Launch_CreateProcess(std::wstring exePath, std::wstring workPath, std::wstring arguments, HANDLE hToken)
 	{
 		std::wcout << L"Starting process using CreateProcess." << std::endl;
 
@@ -25,20 +26,26 @@ namespace
 		{
 			currentDirectoryLaunch = workPath.c_str();
 		}
+		else
+		{
+			std::wcout << L"Workpath is empty, using exepath." << std::endl;
+			//Fix check empty workpath get path from exepath
+		}
 
 		if (vToolElevation)
 		{
 			if (!CreateProcessWithTokenW(hToken, 0, NULL, commandLineLaunch, creationFlags, NULL, currentDirectoryLaunch, &si, &pi))
 			{
 				std::wcout << L"CreateProcessWithTokenW failed: " << GetLastError() << std::endl;
-				return FALSE;
+				return 0;
 			}
 			else
 			{
-				std::wcout << L"CreateProcessWithTokenW success: " << pi.hProcess << std::endl;
+				DWORD processId = GetProcessId(pi.hProcess);
+				std::wcout << L"CreateProcessWithTokenW success: " << processId << std::endl;
 				CloseHandle(pi.hThread);
 				CloseHandle(pi.hProcess);
-				return TRUE;
+				return processId;
 			}
 		}
 		else
@@ -46,19 +53,20 @@ namespace
 			if (!CreateProcessAsUserW(hToken, NULL, commandLineLaunch, NULL, NULL, FALSE, creationFlags, NULL, currentDirectoryLaunch, &si, &pi))
 			{
 				std::wcout << L"CreateProcessAsUserW failed: " << GetLastError() << std::endl;
-				return FALSE;
+				return 0;
 			}
 			else
 			{
-				std::wcout << L"CreateProcessAsUserW success: " << pi.hProcess << std::endl;
+				DWORD processId = GetProcessId(pi.hProcess);
+				std::wcout << L"CreateProcessAsUserW success: " << processId << std::endl;
 				CloseHandle(pi.hThread);
 				CloseHandle(pi.hProcess);
-				return TRUE;
+				return processId;
 			}
 		}
 	}
 
-	BOOL Launch_ShellExecute(std::wstring exePath, std::wstring workPath, std::wstring arguments, BOOL asAdmin)
+	int Launch_ShellExecute(std::wstring exePath, std::wstring workPath, std::wstring arguments, BOOL asAdmin)
 	{
 		std::wcout << L"Starting process using ShellExecute." << std::endl;
 
@@ -69,13 +77,23 @@ namespace
 		shellExecuteInfo.fMask = SEE_MASK_NOCLOSEPROCESS | SEE_MASK_FLAG_NO_UI;
 		shellExecuteInfo.lpVerb = asAdmin ? L"runas" : L"open";
 		shellExecuteInfo.lpFile = exePath.c_str();
-		if (!StringW_IsNullOrWhitespace(arguments))
+
+		//Check for shell command
+		if (!Check_PathShellCommand(exePath))
 		{
-			shellExecuteInfo.lpParameters = arguments.c_str();
-		}
-		if (!StringW_IsNullOrWhitespace(workPath))
-		{
-			shellExecuteInfo.lpDirectory = workPath.c_str();
+			if (!StringW_IsNullOrWhitespace(arguments))
+			{
+				shellExecuteInfo.lpParameters = arguments.c_str();
+			}
+			if (!StringW_IsNullOrWhitespace(workPath))
+			{
+				shellExecuteInfo.lpDirectory = workPath.c_str();
+			}
+			else
+			{
+				std::wcout << L"Workpath is empty, using exepath." << std::endl;
+				//Fix check empty workpath get path from exepath
+			}
 		}
 
 		//Shell execute
@@ -83,23 +101,25 @@ namespace
 		if (shellExecuteInfo.hProcess == NULL)
 		{
 			std::wcout << L"Launching shell process failed: " << GetLastError() << std::endl;
-			return FALSE;
+			return 0;
 		}
 		else
 		{
-			std::wcout << L"Launched shell process success: " << shellExecuteInfo.hProcess << std::endl;
-			return TRUE;
+			DWORD processId = GetProcessId(shellExecuteInfo.hProcess);
+			std::wcout << L"Launched shell process success: " << processId << std::endl;
+			CloseHandle(shellExecuteInfo.hProcess);
+			return processId;
 		}
 	}
 
-	BOOL Launch_Uwp(std::wstring appUserModelId, std::wstring arguments)
+	int Launch_Uwp(std::wstring appUserModelId, std::wstring arguments)
 	{
 		//Initialize Com
 		HRESULT hResult = CoInitializeEx(NULL, COINIT_APARTMENTTHREADED);
 		if (FAILED(hResult))
 		{
 			std::wcout << "Error UWP CoInitializeEx: " << hResult << std::endl;
-			return FALSE;
+			return 0;
 		}
 
 		//Get activation manager
@@ -108,7 +128,7 @@ namespace
 		if (FAILED(hResult) || activateManager == NULL)
 		{
 			std::wcout << "Error UWP CoCreateInstance: " << hResult << std::endl;
-			return FALSE;
+			return 0;
 		}
 
 		//Activate application
@@ -117,12 +137,12 @@ namespace
 		if (FAILED(hResult))
 		{
 			std::wcout << "Launching UWP application failed: " << hResult << std::endl;
-			return FALSE;
+			return 0;
 		}
 		else
 		{
 			std::wcout << "Launched UWP application success: " << processId << std::endl;
-			return TRUE;
+			return processId;
 		}
 	}
 }

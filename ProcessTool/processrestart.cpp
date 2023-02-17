@@ -10,7 +10,7 @@
 
 namespace
 {
-	BOOL Restart_ProcessId(DWORD processId, BOOL skipArgs, std::wstring newArgs)
+	int Restart_ProcessId(DWORD processId, BOOL skipArgs, std::wstring newArgs)
 	{
 		std::wcout << L"Restarting process by id: " << processId << std::endl;
 
@@ -51,15 +51,11 @@ namespace
 		//Launch process
 		if (processDetails.ProcessType == UWP || processDetails.ProcessType == Win32Store)
 		{
-			Launch_Uwp(processDetails.ApplicationUserModelId, launchArgument);
+			return Launch_Uwp(processDetails.ApplicationUserModelId, launchArgument);
 		}
 		else
 		{
-			//Check admin and uiaccess
-			BOOL launchAsAdmin = processAccess.ProcessAdminAccess;
-			BOOL allowUiAccess = processAccess.ProcessUiAccess;
-			Launch_Prepare(processDetails.ExecutablePath, processDetails.WorkPath, launchArgument, false, launchAsAdmin, allowUiAccess);
+			return Launch_Prepare(processDetails.ExecutablePath, processDetails.WorkPath, launchArgument, false, processAccess.ProcessAdminAccess, processAccess.ProcessUiAccess);
 		}
-		return TRUE;
 	}
 }

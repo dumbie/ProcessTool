@@ -1,6 +1,7 @@
 #pragma once
 #include "includes.h"
 #include "processlaunch.cpp"
+#include "processother.cpp"
 #include "strings.h"
 #include "tokenadjust.cpp"
 #include "tokencreate.cpp"
@@ -9,14 +10,14 @@
 
 namespace
 {
-	void Launch_Prepare(std::wstring exePath, std::wstring workPath, std::wstring arguments, BOOL asNormal, BOOL asAdmin, BOOL allowUiAccess)
+	int Launch_Prepare(std::wstring exePath, std::wstring workPath, std::wstring arguments, BOOL asNormal, BOOL asAdmin, BOOL allowUiAccess)
 	{
 		//Check required process action
 		BOOL launchShellExecute = TRUE;
 		BOOL launchUnelevated = FALSE;
 
 		//Check for shell command
-		if (StringW_Contains(exePath, L":/") || StringW_Contains(exePath, L":\\"))
+		if (Check_PathShellCommand(exePath))
 		{
 			std::wcout << L"Shell launch command detected." << std::endl;
 			asAdmin = FALSE;
@@ -69,11 +70,11 @@ namespace
 		//Launch application
 		if (launchShellExecute)
 		{
-			Launch_ShellExecute(exePath, workPath, arguments, asAdmin);
+			return Launch_ShellExecute(exePath, workPath, arguments, asAdmin);
 		}
 		else
 		{
-			Launch_CreateProcess(exePath, workPath, arguments, launchTokenHandle);
+			return Launch_CreateProcess(exePath, workPath, arguments, launchTokenHandle);
 		}
 	}
 }

@@ -52,15 +52,16 @@ namespace
 		CloseHandle(processSnap);
 
 		//Terminate main process
+		bool processClosed = FALSE;
 		HANDLE mainProcess = OpenProcess(PROCESS_TERMINATE, FALSE, processId);
 		if (mainProcess)
 		{
-			TerminateProcess(mainProcess, 1);
+			processClosed = TerminateProcess(mainProcess, 1);
 			CloseHandle(mainProcess);
 		}
 
-		std::wcout << L"Closed process tree by id: " << processId << std::endl;
-		return TRUE;
+		std::wcout << L"Closed process tree by id: " << processId << "/" << processClosed << std::endl;
+		return processClosed;
 	}
 
 	BOOL Close_ProcessMessageHwnd(HWND hWindow)

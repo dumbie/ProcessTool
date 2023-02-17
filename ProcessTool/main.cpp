@@ -9,50 +9,13 @@ namespace
 {
 	void Console_WaitForInput()
 	{
-		std::cout << '\n' << "Press any key to close this window . . .";
+		std::cout << '\n' << "Press any key to close the process tool . . .";
 		int readKey = _getch();
 	}
 
 	int Console_Startup(int argc, wchar_t* argv[])
 	{
 		std::wcout << L"Welcome to the process tool." << std::endl;
-
-		////Debug launch arguments (Launch executable)
-		//argc = 6;
-		//argv = new wchar_t* [6];
-		//argv[1] = String_Convert_to_LPWSTR("-normal");
-		//argv[2] = String_Convert_to_LPWSTR("-allowuiaccess");
-		//argv[3] = String_Convert_to_LPWSTR("-exepath=""\"C:\\Windows\\System32\\Notepad.exe""\"");
-		//argv[4] = String_Convert_to_LPWSTR("-workpath=""\"E:\\""\"");
-		//argv[5] = String_Convert_to_LPWSTR("-args=""\"textfile.txt""\"");
-
-		////Debug launch arguments (Launch Windows Store)
-		//argc = 3;
-		//argv = new wchar_t* [3];
-		//argv[1] = String_Convert_to_LPWSTR("-uwp=Microsoft.WindowsNotepad_8wekyb3d8bbwe!App");
-		//argv[2] = String_Convert_to_LPWSTR("-args=""\"Textfile.txt""\"");
-
-		////Debug launch arguments (Close process)
-		//argc = 3;
-		//argv = new wchar_t* [3];
-		//argv[1] = String_Convert_to_LPWSTR("-close");
-		//argv[2] = String_Convert_to_LPWSTR("-pid=1000");
-		//argv[2] = String_Convert_to_LPWSTR("-pname=Notepad.exe");
-		//argv[2] = String_Convert_to_LPWSTR("-pname=Microsoft.WindowsNotepad_8wekyb3d8bbwe!App");
-
-		////Debug launch arguments (Restart process)
-		//argc = 4;
-		//argv = new wchar_t* [4];
-		//argv[1] = String_Convert_to_LPWSTR("-restart");
-		//argv[2] = String_Convert_to_LPWSTR("-pid=1000");
-		//argv[3] = String_Convert_to_LPWSTR("-skipargs");
-
-		//Debug launch arguments (Show process)
-		//argc = 3;
-		//argv = new wchar_t* [3];
-		//argv[1] = String_Convert_to_LPWSTR("-show");
-		//argv[2] = String_Convert_to_LPWSTR("-pid=1000");
-		//argv[2] = String_Convert_to_LPWSTR("-hwnd=1000");
 
 		//Check launch arguments
 		if (argc < 2)
@@ -192,37 +155,38 @@ namespace
 		Process_ToolUpdateAccessStatus();
 
 		//Check launch arguments
+		int returnValue = 0;
 		if (argumentClose)
 		{
 			if (!StringW_IsNullOrWhitespace(argumentpId))
 			{
-				Close_ProcessTreeId(StringW_Convert_to_DWORD(argumentpId));
+				returnValue = Close_ProcessTreeId(StringW_Convert_to_DWORD(argumentpId));
 			}
 			else if (!StringW_IsNullOrWhitespace(argumentHWND))
 			{
-				Close_ProcessMessageHwnd(StringW_Convert_to_HWND(argumentHWND));
+				returnValue = Close_ProcessMessageHwnd(StringW_Convert_to_HWND(argumentHWND));
 			}
 			else if (!StringW_IsNullOrWhitespace(argumentpName))
 			{
-				Close_ProcessesName(argumentpName);
+				returnValue = Close_ProcessesName(argumentpName);
 			}
 		}
 		else if (argumentRestart)
 		{
 			if (!StringW_IsNullOrWhitespace(argumentpId))
 			{
-				Restart_ProcessId(StringW_Convert_to_DWORD(argumentpId), argumentSkipArgs, argumentArgs);
+				returnValue = Restart_ProcessId(StringW_Convert_to_DWORD(argumentpId), argumentSkipArgs, argumentArgs);
 			}
 		}
 		else if (argumentShow)
 		{
 			if (!StringW_IsNullOrWhitespace(argumentpId))
 			{
-				Show_ProcessId(StringW_Convert_to_DWORD(argumentpId));
+				returnValue = Show_ProcessId(StringW_Convert_to_DWORD(argumentpId));
 			}
 			else if (!StringW_IsNullOrWhitespace(argumentHWND))
 			{
-				Show_ProcessHwnd(StringW_Convert_to_HWND(argumentHWND));
+				returnValue = Show_ProcessHwnd(StringW_Convert_to_HWND(argumentHWND));
 			}
 		}
 		else
@@ -232,18 +196,22 @@ namespace
 				if (StringW_IsNullOrWhitespace(argumentUWPAppId))
 				{
 					std::wcout << L"Windows application id not set." << std::endl;
-					return 0;
 				}
-				Launch_Uwp(argumentUWPAppId, argumentArgs);
+				else
+				{
+					returnValue = Launch_Uwp(argumentUWPAppId, argumentArgs);
+				}
 			}
 			else
 			{
 				if (StringW_IsNullOrWhitespace(argumentExePath))
 				{
 					std::wcout << L"Executable path not set." << std::endl;
-					return 0;
 				}
-				Launch_Prepare(argumentExePath, argumentWorkPath, argumentArgs, argumentNormal, argumentAdmin, argumentAllowUiAccess);
+				else
+				{
+					returnValue = Launch_Prepare(argumentExePath, argumentWorkPath, argumentArgs, argumentNormal, argumentAdmin, argumentAllowUiAccess);
+				}
 			}
 		}
 
@@ -253,8 +221,8 @@ namespace
 			Console_WaitForInput();
 		}
 
-		//return processId
-		return 1337;
+		//Return result value
+		return returnValue;
 	}
 }
 

@@ -2,6 +2,7 @@
 #include "includes.h"
 #include "processwindow.cpp"
 #include "processdetails.cpp"
+#include "processclose.cpp"
 
 namespace
 {
@@ -9,9 +10,9 @@ namespace
 	{
 		std::wcout << L"Showing process window handle: " << processId << "/" << processHwnd << std::endl;
 
-		//Fix Close open Windows prompts
-		//Fix Close open start menu, cortana or search
-		//Fix Close open Windows system menu
+		//Close open Windows prompts
+		Close_ProcessesName(L"consent.exe");
+		Close_ProcessesName(L"fondue.exe");
 
 		//Get current window placement
 		WINDOWPLACEMENT windowPlacement{};
@@ -25,7 +26,7 @@ namespace
 		}
 
 		//Allow changing window
-		if (processId != 0)
+		if (processId > 0)
 		{
 			AllowSetForegroundWindow(processId);
 		}

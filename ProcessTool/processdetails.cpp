@@ -4,6 +4,7 @@
 #include "strings.h"
 #include "processwindow.cpp"
 #include "processparameter.cpp"
+#include "processother.cpp"
 
 namespace
 {
@@ -61,8 +62,7 @@ namespace
 		}
 		else
 		{
-			std::filesystem::path filePath(getString);
-			return filePath.filename();
+			return Convert_ExePathToExeName(getString);
 		}
 	}
 
