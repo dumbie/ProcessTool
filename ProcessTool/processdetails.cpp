@@ -62,7 +62,7 @@ namespace
 		}
 		else
 		{
-			return Convert_ExePathToExeName(getString);
+			return Convert_ExePathToFileNameWithExtension(getString);
 		}
 	}
 

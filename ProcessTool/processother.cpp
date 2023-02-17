@@ -16,10 +16,16 @@ namespace
 		return shellCommand && dividerPosition;
 	}
 
-	std::wstring Convert_ExePathToExeName(std::wstring targetPath)
+	std::wstring Convert_ExePathToFileNameWithExtension(std::wstring targetPath)
 	{
 		std::filesystem::path filePath(targetPath);
 		return filePath.filename();
+	}
+
+	std::wstring Convert_ExePathToFileNameNoExtension(std::wstring targetPath)
+	{
+		std::filesystem::path filePath(targetPath);
+		return filePath.filename().replace_extension();
 	}
 
 	std::wstring Convert_ExePathToWorkPath(std::wstring targetPath)

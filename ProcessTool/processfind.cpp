@@ -3,6 +3,7 @@
 #include "strings.h"
 #include "defines.h"
 #include "headers.h"
+#include "processother.cpp"
 
 namespace
 {
@@ -25,17 +26,16 @@ namespace
 			HANDLE processHandle = OpenProcess(desiredAccess, FALSE, processEntry.th32ProcessID);
 			if (processHandle != INVALID_HANDLE_VALUE && processHandle != NULL)
 			{
-				//Fix convert path to filename
-				//Fix remove file extension from filename
-				//Fix GetFileNameWithoutExtension
 				//Check matching process name
-				std::wstring processNameLower = processName;
-				std::wstring processExecutableNameLower = processEntry.szExeFile;
-				std::wstring processApplicationUserModelIdLower = Process_GetApplicationUserModelId(processHandle);
-				StringW_ToLower(processNameLower);
-				StringW_ToLower(processExecutableNameLower);
-				StringW_ToLower(processApplicationUserModelIdLower);
-				if (processExecutableNameLower == processNameLower || processApplicationUserModelIdLower == processNameLower)
+				std::wstring processTargetExecutableNameLower = Convert_ExePathToFileNameNoExtension(processName);
+				std::wstring processFoundExecutableNameLower = Convert_ExePathToFileNameNoExtension(processEntry.szExeFile);
+				std::wstring processTargetApplicationUserModelIdLower = processName;
+				std::wstring processFoundApplicationUserModelIdLower = Process_GetApplicationUserModelId(processHandle);
+				StringW_ToLower(processTargetExecutableNameLower);
+				StringW_ToLower(processFoundExecutableNameLower);
+				StringW_ToLower(processTargetApplicationUserModelIdLower);
+				StringW_ToLower(processFoundApplicationUserModelIdLower);
+				if (processFoundExecutableNameLower == processTargetExecutableNameLower || processFoundApplicationUserModelIdLower == processTargetApplicationUserModelIdLower)
 				{
 					__Process_Handle newProcess{};
 					newProcess.Identifier = processEntry.th32ProcessID;
