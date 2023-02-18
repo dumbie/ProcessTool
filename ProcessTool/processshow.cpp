@@ -30,24 +30,24 @@ namespace
 		if (processId > 0)
 		{
 			AllowSetForegroundWindow(processId);
-			Thread_Sleep(100);
+			Thread_Sleep(50);
 		}
 
 		//Show window async
 		ShowWindowAsync(processHwnd, windowShowCommand);
-		Thread_Sleep(100);
+		Thread_Sleep(50);
 
 		//Show window normal
 		ShowWindow(processHwnd, windowShowCommand);
-		Thread_Sleep(100);
+		Thread_Sleep(50);
 
 		//Bring window to top
 		BringWindowToTop(processHwnd);
-		Thread_Sleep(100);
+		Thread_Sleep(50);
 
 		//Switch to the window
 		SwitchToThisWindow(processHwnd, TRUE);
-		Thread_Sleep(100);
+		Thread_Sleep(50);
 
 		return TRUE;
 	}

@@ -52,6 +52,7 @@ namespace
 
 	std::wstring Window_GetAppUserModelId(HWND hWindow)
 	{
+		//Get property store
 		IPropertyStore* propertyStore = NULL;
 		HRESULT hResult = SHGetPropertyStoreForWindow(hWindow, IID_IPropertyStore, (void**)&propertyStore);
 		if (FAILED(hResult) || propertyStore == NULL)
@@ -59,15 +60,20 @@ namespace
 			return L"";
 		}
 
+		//Get property value
 		PROPVARIANT propertyVariant;
 		hResult = propertyStore->GetValue(PKEY_AppUserModel_ID, &propertyVariant);
 		if (FAILED(hResult))
 		{
 			return L"";
 		}
-
 		std::wstring propertyString = propertyVariant.pwszVal;
+
+		//Cleanup
+		propertyStore->Release();
 		PropVariantClear(&propertyVariant);
+
+		//Return
 		return propertyString;
 	}
 

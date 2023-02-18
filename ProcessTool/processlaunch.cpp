@@ -117,10 +117,10 @@ namespace
 	int Launch_Uwp(std::wstring appUserModelId, std::wstring arguments)
 	{
 		//Initialize Com
-		HRESULT hResult = CoInitializeEx(NULL, COINIT_APARTMENTTHREADED);
+		HRESULT hResult = CoInitialize(NULL);
 		if (FAILED(hResult))
 		{
-			std::wcout << "Error UWP CoInitializeEx: " << hResult << std::endl;
+			std::wcout << "Error UWP CoInitialize: " << hResult << std::endl;
 			return 0;
 		}
 
@@ -136,6 +136,12 @@ namespace
 		//Activate application
 		DWORD processId = 0;
 		hResult = activateManager->ActivateApplication(appUserModelId.c_str(), arguments.c_str(), AO_NOERRORUI, &processId);
+
+		//Cleanup
+		activateManager->Release();
+		CoUninitialize();
+
+		//Return
 		if (FAILED(hResult))
 		{
 			std::wcout << "Launching UWP application failed: " << hResult << std::endl;
