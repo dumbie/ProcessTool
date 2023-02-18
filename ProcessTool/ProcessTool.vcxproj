@@ -161,11 +161,12 @@
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="processother.cpp" />
+    <ClCompile Include="processfunctions.cpp" />
     <ClCompile Include="processclose.cpp" />
     <ClCompile Include="processfind.cpp" />
     <ClCompile Include="processlaunch.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="processmulti.cpp" />
     <ClCompile Include="processparameter.cpp" />
     <ClCompile Include="processprepare.cpp" />
     <ClCompile Include="processrestart.cpp" />

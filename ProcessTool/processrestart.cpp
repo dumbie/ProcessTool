@@ -7,6 +7,7 @@
 #include "processprepare.cpp"
 #include "processwindow.cpp"
 #include "processstatus.cpp"
+#include "processmulti.cpp"
 
 namespace
 {
@@ -35,8 +36,8 @@ namespace
 			}
 		}
 
-		//Get process details
-		__Process_Details processDetails = Process_GetDetails(processId, desiredAccess, TRUE);
+		//Get multi process
+		__Process_Multi processDetails = ProcessMulti_GetFromProcessId(processId, desiredAccess, TRUE);
 
 		//Check launch argument
 		std::wstring launchArgument = newArgs;

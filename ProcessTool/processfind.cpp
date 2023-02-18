@@ -3,7 +3,7 @@
 #include "strings.h"
 #include "defines.h"
 #include "headers.h"
-#include "processother.cpp"
+#include "processfunctions.cpp"
 
 namespace
 {

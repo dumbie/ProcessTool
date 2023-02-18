@@ -93,8 +93,6 @@ namespace
 	{
 		std::wcout << L"Closing process by window message: " << hWindow << std::endl;
 
-		//Fix show window before sending message, uwp requires this
-
 		LRESULT resultClose = SendMessageW(hWindow, WM_CLOSE, 0, 0);
 		LRESULT resultQuit = SendMessageW(hWindow, WM_QUIT, 0, 0);
 

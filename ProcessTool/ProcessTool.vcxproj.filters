@@ -60,7 +60,10 @@
     <ClCompile Include="processthread.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="processother.cpp">
+    <ClCompile Include="processfunctions.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="processmulti.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

@@ -40,7 +40,7 @@ namespace
 		HANDLE ProcessHandle;
 	};
 
-	struct __Process_Details
+	struct __Process_Multi
 	{
 		DWORD Identifier;
 		HANDLE ProcessHandle;

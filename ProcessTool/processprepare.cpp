@@ -1,7 +1,7 @@
 #pragma once
 #include "includes.h"
 #include "processlaunch.cpp"
-#include "processother.cpp"
+#include "processfunctions.cpp"
 #include "strings.h"
 #include "tokenadjust.cpp"
 #include "tokencreate.cpp"

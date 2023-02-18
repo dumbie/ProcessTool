@@ -3,6 +3,7 @@
 #include "processwindow.cpp"
 #include "processdetails.cpp"
 #include "processclose.cpp"
+#include "processmulti.cpp"
 
 namespace
 {
@@ -65,8 +66,8 @@ namespace
 	{
 		std::wcout << L"Showing process by id: " << processId << std::endl;
 
-		//Get process details
-		__Process_Details processDetails = Process_GetDetails(processId, PROCESS_QUERY_LIMITED_INFORMATION, TRUE);
+		//Get multi process
+		__Process_Multi processDetails = ProcessMulti_GetFromProcessId(processId, PROCESS_QUERY_LIMITED_INFORMATION, TRUE);
 
 		//Check window handle
 		if (processDetails.MainWindowHandle == (HWND)0)
