@@ -130,7 +130,7 @@ namespace
 		{
 			std::wcout << L"Process thread id: " << processThreadId << std::endl;
 
-			std::vector<HWND> threadWindows = Thread_GetThreadWindowHandles(processThreadId);
+			std::vector<HWND> threadWindows = Thread_GetWindowHandles(processThreadId);
 			if (threadWindows.size() == 0)
 			{
 				std::wcout << L"Process thread has no windows: " << processThreadId << std::endl;
@@ -156,8 +156,11 @@ namespace
 
 			if (uwpApplicationFrame && uwpUserInterface)
 			{
-				std::wstring uwpAppUserModelId = Window_GetAppUserModelId(uwpWindowHandle);
-				if (uwpAppUserModelId == appUserModelId)
+				std::wstring targetAppUserModelIdLower = appUserModelId;
+				std::wstring foundAppUserModelIdLower = Window_GetAppUserModelId(uwpWindowHandle);
+				StringW_ToLower(targetAppUserModelIdLower);
+				StringW_ToLower(foundAppUserModelIdLower);
+				if (targetAppUserModelIdLower == foundAppUserModelIdLower)
 				{
 					std::wcout << L"Process uwp thread window: " << uwpWindowHandle << "/" << appUserModelId << std::endl;
 					return uwpWindowHandle;

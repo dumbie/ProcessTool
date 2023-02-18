@@ -1,6 +1,7 @@
 #pragma once
 #include "includes.h"
 #include "variables.h"
+#include "processwindow.cpp"
 
 namespace
 {
@@ -70,8 +71,8 @@ namespace
 	HANDLE Token_Create_Unelevated()
 	{
 		//Get unelevated processid
-		DWORD unelevatedProcessId;
-		if (!GetWindowThreadProcessId(GetShellWindow(), &unelevatedProcessId))
+		DWORD unelevatedProcessId = Window_GetProcessId(GetShellWindow());
+		if (unelevatedProcessId <= 0)
 		{
 			std::wcout << L"GetWindowThreadProcessId unelevated failed: " << GetLastError() << std::endl;
 			return NULL;

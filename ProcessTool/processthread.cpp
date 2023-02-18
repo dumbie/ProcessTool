@@ -29,7 +29,7 @@ namespace
 		return listThreadIds;
 	}
 
-	std::vector<HWND> Thread_GetThreadWindowHandles(DWORD threadId)
+	std::vector<HWND> Thread_GetWindowHandles(DWORD threadId)
 	{
 		std::wcout << L"Getting thread window handles: " << threadId << std::endl;
 

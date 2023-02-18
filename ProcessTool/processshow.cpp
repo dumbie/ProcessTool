@@ -29,17 +29,24 @@ namespace
 		if (processId > 0)
 		{
 			AllowSetForegroundWindow(processId);
+			Thread_Sleep(100);
 		}
 
-		//Change window placement
+		//Show window async
 		ShowWindowAsync(processHwnd, windowShowCommand);
+		Thread_Sleep(100);
+
+		//Show window normal
 		ShowWindow(processHwnd, windowShowCommand);
+		Thread_Sleep(100);
 
 		//Bring window to top
 		BringWindowToTop(processHwnd);
+		Thread_Sleep(100);
 
 		//Switch to the window
-		SwitchToThisWindow(processHwnd, true);
+		SwitchToThisWindow(processHwnd, TRUE);
+		Thread_Sleep(100);
 
 		return TRUE;
 	}
@@ -49,8 +56,7 @@ namespace
 		std::wcout << L"Showing process by window handle: " << processHwnd << std::endl;
 
 		//Get process id from window handle
-		DWORD foundProcessId = 0;
-		GetWindowThreadProcessId(processHwnd, &foundProcessId);
+		DWORD foundProcessId = Window_GetProcessId(processHwnd);
 
 		return Show_ProcessIdHwnd(foundProcessId, processHwnd);
 	}
