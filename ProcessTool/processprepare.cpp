@@ -44,13 +44,15 @@ namespace
 		if (launchUnelevated)
 		{
 			launchTokenHandle = Token_Create_Unelevated();
-			//launchTokenHandle = Token_Create_Restricted(launchTokenHandle);
 		}
-
-		//Duplicate token handle
-		if (!launchShellExecute)
+		else
 		{
 			launchTokenHandle = Token_Create_Current();
+		}
+
+		//Duplicate launch token
+		if (!launchShellExecute)
+		{
 			launchTokenHandle = Token_Duplicate(launchTokenHandle);
 		}
 
