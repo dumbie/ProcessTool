@@ -11,7 +11,7 @@
 
 namespace
 {
-	int Restart_ProcessId(DWORD processId, BOOL skipArgs, std::wstring newArgs)
+	int Restart_ProcessId(DWORD processId, std::wstring newArgs, BOOL withoutArgs)
 	{
 		std::wcout << L"Restarting process by id: " << processId << std::endl;
 
@@ -40,10 +40,14 @@ namespace
 		__Process_Multi processDetails = ProcessMulti_GetFromProcessId(processId, desiredAccess, TRUE);
 
 		//Check launch argument
-		std::wstring launchArgument = newArgs;
-		if (StringW_IsNullOrWhitespace(launchArgument))
+		std::wstring launchArgument = L"";
+		if (!withoutArgs)
 		{
-			launchArgument = processDetails.Argument;
+			launchArgument = newArgs;
+			if (StringW_IsNullOrWhitespace(launchArgument))
+			{
+				launchArgument = processDetails.Argument;
+			}
 		}
 
 		//Close current process
