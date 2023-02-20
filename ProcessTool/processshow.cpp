@@ -26,28 +26,31 @@ namespace
 			windowShowCommand = SW_SHOWMAXIMIZED;
 		}
 
-		//Allow changing window
-		if (processId > 0)
+		for (int showCount = 0; showCount <= 2; showCount++)
 		{
-			AllowSetForegroundWindow(processId);
-			Thread_Sleep(50);
+			//Allow changing window
+			if (processId > 0)
+			{
+				AllowSetForegroundWindow(processId);
+				Thread_Sleep(10);
+			}
+
+			//Show window async
+			ShowWindowAsync(processHwnd, windowShowCommand);
+			Thread_Sleep(10);
+
+			//Show window normal
+			ShowWindow(processHwnd, windowShowCommand);
+			Thread_Sleep(10);
+
+			//Bring window to top
+			BringWindowToTop(processHwnd);
+			Thread_Sleep(10);
+
+			//Switch to the window
+			SwitchToThisWindow(processHwnd, TRUE);
+			Thread_Sleep(10);
 		}
-
-		//Show window async
-		ShowWindowAsync(processHwnd, windowShowCommand);
-		Thread_Sleep(50);
-
-		//Show window normal
-		ShowWindow(processHwnd, windowShowCommand);
-		Thread_Sleep(50);
-
-		//Bring window to top
-		BringWindowToTop(processHwnd);
-		Thread_Sleep(50);
-
-		//Switch to the window
-		SwitchToThisWindow(processHwnd, TRUE);
-		Thread_Sleep(50);
 
 		return TRUE;
 	}

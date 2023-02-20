@@ -79,8 +79,8 @@ namespace
 		shellExecuteInfo.lpVerb = asAdmin ? L"runas" : L"open";
 		shellExecuteInfo.lpFile = exePath.c_str();
 
-		//Check for shell command
-		if (!Check_PathShellCommand(exePath))
+		//Check for url protocol
+		if (!Check_PathUrlProtocol(exePath))
 		{
 			if (!StringW_IsNullOrWhitespace(arguments))
 			{
@@ -126,7 +126,7 @@ namespace
 
 		//Get activation manager
 		IApplicationActivationManager* activateManager = NULL;
-		hResult = CoCreateInstance(CLSID_ApplicationActivationManager, NULL, CLSCTX_LOCAL_SERVER, IID_PPV_ARGS(&activateManager));
+		hResult = CoCreateInstance(CLSID_ApplicationActivationManager, NULL, CLSCTX_ALL, IID_PPV_ARGS(&activateManager));
 		if (FAILED(hResult) || activateManager == NULL)
 		{
 			std::wcout << "Error UWP CoCreateInstance: " << hResult << std::endl;

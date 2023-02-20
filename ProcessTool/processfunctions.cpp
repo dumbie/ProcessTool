@@ -9,11 +9,11 @@ namespace
 		std::this_thread::sleep_for(std::chrono::milliseconds(milliSeconds));
 	}
 
-	BOOL Check_PathShellCommand(std::wstring targetPath)
+	BOOL Check_PathUrlProtocol(std::wstring targetPath)
 	{
 		BOOL dividerPosition = targetPath.find(L":") > 1;
-		BOOL shellCommand = StringW_Contains(targetPath, L":/") || StringW_Contains(targetPath, L":\\");
-		return shellCommand && dividerPosition;
+		BOOL urlProtocol = StringW_Contains(targetPath, L":/") || StringW_Contains(targetPath, L":\\");
+		return urlProtocol && dividerPosition;
 	}
 
 	std::wstring Convert_ExePathToFileNameWithExtension(std::wstring targetPath)

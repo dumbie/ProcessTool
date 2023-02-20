@@ -16,8 +16,8 @@ namespace
 		BOOL launchShellExecute = TRUE;
 		BOOL launchUnelevated = FALSE;
 
-		//Check for shell command
-		if (Check_PathShellCommand(exePath))
+		//Check for url protocol
+		if (Check_PathUrlProtocol(exePath))
 		{
 			std::wcout << L"Shell launch command detected." << std::endl;
 			asAdmin = FALSE;
