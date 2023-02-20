@@ -7,27 +7,31 @@ namespace
 {
 	void CommandLine_RemoveExePath(std::wstring& commandLine)
 	{
+		//Check command line
 		if (StringW_IsNullOrWhitespace(commandLine))
 		{
 			return;
 		}
 
-		BOOL inQuotes = FALSE;
-		const wchar_t* commandLineConst = commandLine.c_str();
-		while (*commandLineConst)
+		//Remove executable path
+		int endIndex = 0;
+		bool inQuotes = false;
+		for (wchar_t commandChar : commandLine)
 		{
-			if (*commandLineConst == L'"')
+			if (commandChar == '"')
 			{
 				inQuotes = !inQuotes;
 			}
-			else if (!inQuotes && *commandLineConst == L' ')
+			else if (!inQuotes && commandChar == ' ')
 			{
-				commandLine = commandLineConst + 1;
-				return;
+				break;
 			}
-			commandLineConst = CharNextW(commandLineConst);
+			endIndex++;
 		}
-		commandLine = commandLineConst;
+		commandLine = commandLine.substr(endIndex);
+
+		//Trim command line
+		StringW_Trim(commandLine);
 	}
 
 	std::wstring GetApplicationParameter32(HANDLE hProcess, __PROCESS_PARAMETER_OPTIONS pOption)

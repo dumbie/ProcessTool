@@ -58,42 +58,36 @@ namespace
 			{
 				argumentExePath = argument;
 				StringW_Replace(argumentExePath, L"-exepath=", L"");
-				StringW_Replace(argumentExePath, L"\"", L"");
 			}
 
 			if (std::wstring(argument).starts_with(L"-workpath="))
 			{
 				argumentWorkPath = argument;
 				StringW_Replace(argumentWorkPath, L"-workpath=", L"");
-				StringW_Replace(argumentWorkPath, L"\"", L"");
 			}
 
 			if (std::wstring(argument).starts_with(L"-args="))
 			{
 				argumentArgs = argument;
 				StringW_Replace(argumentArgs, L"-args=", L"");
-				StringW_Replace(argumentArgs, L"\"", L"");
 			}
 
 			if (std::wstring(argument).starts_with(L"-pid="))
 			{
 				argumentpId = argument;
 				StringW_Replace(argumentpId, L"-pid=", L"");
-				StringW_Replace(argumentpId, L"\"", L"");
 			}
 
 			if (std::wstring(argument).starts_with(L"-pname="))
 			{
 				argumentpName = argument;
 				StringW_Replace(argumentpName, L"-pname=", L"");
-				StringW_Replace(argumentpName, L"\"", L"");
 			}
 
 			if (std::wstring(argument).starts_with(L"-hwnd="))
 			{
 				argumentHWND = argument;
 				StringW_Replace(argumentHWND, L"-hwnd=", L"");
-				StringW_Replace(argumentHWND, L"\"", L"");
 			}
 
 			if (std::wstring(argument).starts_with(L"-uwp="))
@@ -101,7 +95,6 @@ namespace
 				argumentUWP = TRUE;
 				argumentUWPAppUserModelId = argument;
 				StringW_Replace(argumentUWPAppUserModelId, L"-uwp=", L"");
-				StringW_Replace(argumentUWPAppUserModelId, L"\"", L"");
 			}
 
 			if (std::wstring(argument).starts_with(L"-normal"))

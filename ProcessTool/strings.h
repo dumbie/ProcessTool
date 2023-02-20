@@ -43,6 +43,34 @@ namespace
 		targetString = std::regex_replace(targetString, std::wregex(from), to);
 	}
 
+	void String_Replace_First(std::string& targetString, std::string from, std::string to)
+	{
+		size_t replacePosition = targetString.find_first_of(from);
+		if (replacePosition == std::string::npos) { return; }
+		targetString.replace(replacePosition, from.length(), to);
+	}
+
+	void StringW_Replace_First(std::wstring& targetString, std::wstring from, std::wstring to)
+	{
+		size_t replacePosition = targetString.find_first_of(from);
+		if (replacePosition == std::wstring::npos) { return; }
+		targetString.replace(replacePosition, from.length(), to);
+	}
+
+	void String_Replace_Last(std::string& targetString, std::string from, std::string to)
+	{
+		size_t replacePosition = targetString.find_last_of(from);
+		if (replacePosition == std::string::npos) { return; }
+		targetString.replace(replacePosition, from.length(), to);
+	}
+
+	void StringW_Replace_Last(std::wstring& targetString, std::wstring from, std::wstring to)
+	{
+		size_t replacePosition = targetString.find_last_of(from);
+		if (replacePosition == std::wstring::npos) { return; }
+		targetString.replace(replacePosition, from.length(), to);
+	}
+
 	void String_Trim(std::string& strimString)
 	{
 		const char* strimChar = " \t\n\r\f\v";
