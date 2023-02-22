@@ -120,7 +120,7 @@
       <UACUIAccess>false</UACUIAccess>
     </Link>
     <PostBuildEvent>
-      <Command>$(SolutionDir)SignToolExe.exe</Command>
+      <Command>$(SolutionDir)..\SignToolExe.exe</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
@@ -157,7 +157,7 @@
       <UACUIAccess>false</UACUIAccess>
     </Link>
     <PostBuildEvent>
-      <Command>$(SolutionDir)SignToolExe.exe</Command>
+      <Command>$(SolutionDir)..\SignToolExe.exe</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
