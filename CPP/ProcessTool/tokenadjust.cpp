@@ -23,7 +23,7 @@ namespace
 		tokenPrivileges.PrivilegeCount = 1;
 		tokenPrivileges.Privileges[0].Luid = luidPrivilege;
 		tokenPrivileges.Privileges[0].Attributes = enabled ? SE_PRIVILEGE_ENABLED : SE_PRIVILEGE_REMOVED;
-		if (!AdjustTokenPrivileges(hToken, FALSE, &tokenPrivileges, sizeof(TOKEN_PRIVILEGES), 0, 0))
+		if (!AdjustTokenPrivileges(hToken, FALSE, &tokenPrivileges, sizeof(tokenPrivileges), 0, 0))
 		{
 			std::wcout << L"AdjustTokenPrivileges failed: " << GetLastError() << "/" << privilegeName << std::endl;
 			return FALSE;
@@ -39,7 +39,7 @@ namespace
 	{
 		//Disable token uiaccess
 		DWORD enableUiAccess = FALSE;
-		if (!SetTokenInformation(hToken, TokenUIAccess, &enableUiAccess, sizeof(DWORD)))
+		if (!SetTokenInformation(hToken, TokenUIAccess, &enableUiAccess, sizeof(enableUiAccess)))
 		{
 			std::wcout << L"SetTokenInformation uiaccess failed: " << GetLastError() << "/" << enableUiAccess << std::endl;
 			return FALSE;

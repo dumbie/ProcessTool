@@ -17,7 +17,8 @@ namespace
 		BOOL launchUnelevated = FALSE;
 
 		//Check for url protocol
-		if (Check_PathUrlProtocol(exePath))
+		bool shellCommand = Check_PathUrlProtocol(exePath);
+		if (shellCommand)
 		{
 			std::wcout << L"Shell launch command detected." << std::endl;
 			asAdmin = FALSE;
@@ -68,6 +69,20 @@ namespace
 
 		//Adjust token integrity level
 		//Token_Adjust_IntegrityLevel(WinMediumLabelSid, launchTokenHandle);
+
+		//Check work path
+		if (!shellCommand && StringW_IsNullOrWhitespace(workPath))
+		{
+			workPath = Convert_ExePathToWorkPath(exePath);
+			std::wcout << L"Workpath is empty, using exepath: " << workPath << std::endl;
+		}
+
+		//Show debug message
+		if (vToolDebugMode)
+		{
+			std::wstring debugMessage = L"ExePath: " + exePath + L"\n\nWorkPath: " + workPath + L"\n\nArguments: " + arguments;
+			MessageBoxW(NULL, debugMessage.c_str(), L"Process Tool Debug", MB_OK);
+		}
 
 		//Launch application
 		if (launchShellExecute)

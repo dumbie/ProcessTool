@@ -53,16 +53,16 @@ namespace
 			return L"";
 		}
 
-		__PROCESS_BASIC_INFORMATION32 info;
-		NTSTATUS queryResult = queryInformationProcess(hProcess, ProcessBasicInformation, &info, sizeof(info), NULL);
-		if (!NT_SUCCESS(queryResult) || info.PebBaseAddress == NULL)
+		__PROCESS_BASIC_INFORMATION32 basicInformation;
+		NTSTATUS queryResult = queryInformationProcess(hProcess, ProcessBasicInformation, &basicInformation, sizeof(basicInformation), NULL);
+		if (!NT_SUCCESS(queryResult) || basicInformation.PebBaseAddress == NULL)
 		{
 			std::wcout << "Failed to get ProcessBasicInformation for: " << hProcess << std::endl;
 			return L"";
 		}
 
 		__PEB32 pebCopy;
-		NTSTATUS readResult = readVirtualMemory(hProcess, info.PebBaseAddress, &pebCopy, sizeof(pebCopy), NULL);
+		NTSTATUS readResult = readVirtualMemory(hProcess, basicInformation.PebBaseAddress, &pebCopy, sizeof(pebCopy), NULL);
 		if (!NT_SUCCESS(readResult))
 		{
 			std::wcout << "Failed to get PebBaseAddress for: " << hProcess << std::endl;
@@ -148,16 +148,16 @@ namespace
 			return L"";
 		}
 
-		__PROCESS_BASIC_INFORMATION64 info;
-		NTSTATUS queryResult = queryInformationProcess(hProcess, ProcessBasicInformation, &info, sizeof(info), NULL);
-		if (!NT_SUCCESS(queryResult) || info.PebBaseAddress == NULL)
+		__PROCESS_BASIC_INFORMATION64 basicInformation;
+		NTSTATUS queryResult = queryInformationProcess(hProcess, ProcessBasicInformation, &basicInformation, sizeof(basicInformation), NULL);
+		if (!NT_SUCCESS(queryResult) || basicInformation.PebBaseAddress == NULL)
 		{
 			std::wcout << "Failed to get ProcessBasicInformation for: " << hProcess << std::endl;
 			return L"";
 		}
 
 		__PEB64 pebCopy;
-		NTSTATUS readResult = readVirtualMemory(hProcess, info.PebBaseAddress, &pebCopy, sizeof(pebCopy), NULL);
+		NTSTATUS readResult = readVirtualMemory(hProcess, basicInformation.PebBaseAddress, &pebCopy, sizeof(pebCopy), NULL);
 		if (!NT_SUCCESS(readResult))
 		{
 			std::wcout << "Failed to get PebBaseAddress for: " << hProcess << std::endl;

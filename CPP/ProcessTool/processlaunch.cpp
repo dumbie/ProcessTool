@@ -73,7 +73,7 @@ namespace
 
 		//Set execute information
 		SHELLEXECUTEINFOW shellExecuteInfo{};
-		shellExecuteInfo.cbSize = sizeof(SHELLEXECUTEINFOW);
+		shellExecuteInfo.cbSize = sizeof(shellExecuteInfo);
 		shellExecuteInfo.nShow = SW_SHOW;
 		shellExecuteInfo.fMask = SEE_MASK_NOCLOSEPROCESS | SEE_MASK_FLAG_NO_UI;
 		shellExecuteInfo.lpVerb = asAdmin ? L"runas" : L"open";
@@ -89,12 +89,6 @@ namespace
 			if (!StringW_IsNullOrWhitespace(workPath))
 			{
 				shellExecuteInfo.lpDirectory = workPath.c_str();
-			}
-			else
-			{
-				std::wstring exeWorkPath = Convert_ExePathToWorkPath(exePath);
-				shellExecuteInfo.lpDirectory = exeWorkPath.c_str();
-				std::wcout << L"Workpath is empty, using exepath: " << shellExecuteInfo.lpDirectory << std::endl;
 			}
 		}
 
@@ -116,6 +110,13 @@ namespace
 
 	int Launch_Uwp(std::wstring appUserModelId, std::wstring arguments)
 	{
+		//Show debug message
+		if (vToolDebugMode)
+		{
+			std::wstring debugMessage = L"AppUserModelId: " + appUserModelId + L"\n\nArguments: " + arguments;
+			MessageBoxW(NULL, debugMessage.c_str(), L"Process Tool Debug", MB_OK);
+		}
+
 		//Initialize Com
 		HRESULT hResult = CoInitialize(NULL);
 		if (FAILED(hResult))

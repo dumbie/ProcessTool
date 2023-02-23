@@ -25,7 +25,7 @@ namespace
 		else
 		{
 			//Get process access
-			processAccess = Process_GetAccessStatus(processId, false);
+			processAccess = Process_GetAccessStatus(processId, FALSE);
 			if (processAccess.ProcessAdminAccess)
 			{
 				desiredAccess = PROCESS_QUERY_LIMITED_INFORMATION;
@@ -63,7 +63,7 @@ namespace
 		}
 		else
 		{
-			return Launch_Prepare(processDetails.ExecutablePath, processDetails.WorkPath, launchArgument, false, processAccess.ProcessAdminAccess, processAccess.ProcessUiAccess);
+			return Launch_Prepare(processDetails.ExecutablePath, processDetails.WorkPath, launchArgument, FALSE, processAccess.ProcessAdminAccess, processAccess.ProcessUiAccess);
 		}
 	}
 }

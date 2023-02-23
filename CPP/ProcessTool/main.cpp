@@ -9,7 +9,7 @@ namespace
 {
 	void Console_WaitForInput()
 	{
-		std::cout << '\n' << "Press any key to close the process tool . . .";
+		std::cout << "\nPress any key to close the process tool . . .";
 		int readKey = _getch();
 	}
 
@@ -20,7 +20,7 @@ namespace
 		//Check launch arguments
 		if (argc < 2)
 		{
-			std::wcout << L"Command line arguments:" << std::endl;
+			std::wcout << L"\nCommand line arguments:" << std::endl;
 			std::wcout << L"Launch executable: ProcessTool -exepath=""\"C:\\Windows\\System32\\Notepad.exe""\" [opt: -workpath=""\"C:\\Windows\\System32""\"] [opt: -args=""\"Textfile.txt""\"] [opt: -normal or -admin] [opt: -allowuiaccess]" << std::endl;
 			std::wcout << L"Launch Windows Store: ProcessTool -uwp=""\"Microsoft.WindowsNotepad_8wekyb3d8bbwe!App""\" [opt: -args=""\"Textfile.txt""\"]" << std::endl;
 			std::wcout << L"Close: ProcessTool -close -pid=1000 or -hwnd=1000 or -pname=""\"Notepad.exe""\" or -pname=""\"Microsoft.WindowsNotepad_8wekyb3d8bbwe!App""\"" << std::endl;
@@ -38,7 +38,6 @@ namespace
 		std::wstring argumentpId = L"";
 		std::wstring argumentpName = L"";
 		std::wstring argumentHWND = L"";
-		BOOL argumentWait = FALSE;
 		BOOL argumentUWP = FALSE;
 		BOOL argumentNormal = FALSE;
 		BOOL argumentAdmin = FALSE;
@@ -50,54 +49,55 @@ namespace
 		for (int i = 1; i < argc; i++)
 		{
 			std::wstring argument = std::wstring(argv[i]);
-			std::wcout << L"Tool argument: " << argument << std::endl;
-			StringW_ToLower(argument);
 			StringW_Trim(argument);
+			std::wstring argumentLower = argument;
+			StringW_ToLower(argumentLower);
+			std::wcout << L"Tool argument: " << argument << std::endl;
 
-			if (std::wstring(argument).starts_with(L"-exepath="))
+			if (std::wstring(argumentLower).starts_with(L"-exepath="))
 			{
-				argumentExePath = argument;
-				StringW_Replace(argumentExePath, L"-exepath=", L"");
+				size_t cutLength = strlen("-exepath=");
+				argumentExePath = argument.substr(cutLength);
 			}
 
-			if (std::wstring(argument).starts_with(L"-workpath="))
+			else if (std::wstring(argumentLower).starts_with(L"-workpath="))
 			{
-				argumentWorkPath = argument;
-				StringW_Replace(argumentWorkPath, L"-workpath=", L"");
+				size_t cutLength = strlen("-workpath=");
+				argumentWorkPath = argument.substr(cutLength);
 			}
 
-			if (std::wstring(argument).starts_with(L"-args="))
+			else if (std::wstring(argumentLower).starts_with(L"-args="))
 			{
-				argumentArgs = argument;
-				StringW_Replace(argumentArgs, L"-args=", L"");
+				size_t cutLength = strlen("-args=");
+				argumentArgs = argument.substr(cutLength);
 			}
 
-			if (std::wstring(argument).starts_with(L"-pid="))
+			else if (std::wstring(argumentLower).starts_with(L"-pid="))
 			{
-				argumentpId = argument;
-				StringW_Replace(argumentpId, L"-pid=", L"");
+				size_t cutLength = strlen("-pid=");
+				argumentpId = argument.substr(cutLength);
 			}
 
-			if (std::wstring(argument).starts_with(L"-pname="))
+			else if (std::wstring(argumentLower).starts_with(L"-pname="))
 			{
-				argumentpName = argument;
-				StringW_Replace(argumentpName, L"-pname=", L"");
+				size_t cutLength = strlen("-pname=");
+				argumentpName = argument.substr(cutLength);
 			}
 
-			if (std::wstring(argument).starts_with(L"-hwnd="))
+			else if (std::wstring(argumentLower).starts_with(L"-hwnd="))
 			{
-				argumentHWND = argument;
-				StringW_Replace(argumentHWND, L"-hwnd=", L"");
+				size_t cutLength = strlen("-hwnd=");
+				argumentHWND = argument.substr(cutLength);
 			}
 
-			if (std::wstring(argument).starts_with(L"-uwp="))
+			else if (std::wstring(argumentLower).starts_with(L"-uwp="))
 			{
 				argumentUWP = TRUE;
-				argumentUWPAppUserModelId = argument;
-				StringW_Replace(argumentUWPAppUserModelId, L"-uwp=", L"");
+				size_t cutLength = strlen("-uwp=");
+				argumentUWPAppUserModelId = argument.substr(cutLength);
 			}
 
-			if (std::wstring(argument).starts_with(L"-normal"))
+			else if (std::wstring(argumentLower).starts_with(L"-normal"))
 			{
 				if (!argumentAdmin)
 				{
@@ -105,7 +105,7 @@ namespace
 				}
 			}
 
-			if (std::wstring(argument).starts_with(L"-admin"))
+			else if (std::wstring(argumentLower).starts_with(L"-admin"))
 			{
 				if (!argumentNormal)
 				{
@@ -113,34 +113,39 @@ namespace
 				}
 			}
 
-			if (std::wstring(argument).starts_with(L"-allowuiaccess"))
+			else if (std::wstring(argumentLower).starts_with(L"-allowuiaccess"))
 			{
 				argumentAllowUiAccess = TRUE;
 			}
 
-			if (std::wstring(argument).starts_with(L"-close"))
+			else if (std::wstring(argumentLower).starts_with(L"-close"))
 			{
 				argumentClose = TRUE;
 			}
 
-			if (std::wstring(argument).starts_with(L"-show"))
+			else if (std::wstring(argumentLower).starts_with(L"-show"))
 			{
 				argumentShow = TRUE;
 			}
 
-			if (std::wstring(argument).starts_with(L"-restart"))
+			else if (std::wstring(argumentLower).starts_with(L"-restart"))
 			{
 				argumentRestart = TRUE;
 			}
 
-			if (std::wstring(argument).starts_with(L"-withoutargs"))
+			else if (std::wstring(argumentLower).starts_with(L"-withoutargs"))
 			{
 				argumentWithoutArgs = TRUE;
 			}
 
-			if (std::wstring(argument).starts_with(L"-wait"))
+			else if (std::wstring(argumentLower).starts_with(L"-debug"))
 			{
-				argumentWait = TRUE;
+				vToolDebugMode = TRUE;
+			}
+
+			else if (std::wstring(argumentLower).starts_with(L"-wait"))
+			{
+				vToolWaitClose = TRUE;
 			}
 		}
 
@@ -213,7 +218,7 @@ namespace
 		}
 
 		//Wait for user key input
-		if (argumentWait)
+		if (vToolWaitClose)
 		{
 			Console_WaitForInput();
 		}
