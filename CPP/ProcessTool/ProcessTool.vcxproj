@@ -168,6 +168,9 @@
     <ClCompile Include="main.cpp" />
     <ClCompile Include="processmulti.cpp" />
     <ClCompile Include="processparameter.cpp" />
+    <ClCompile Include="processparameter32.cpp" />
+    <ClCompile Include="processparameter64.cpp" />
+    <ClCompile Include="processparameterwow64.cpp" />
     <ClCompile Include="processprepare.cpp" />
     <ClCompile Include="processrestart.cpp" />
     <ClCompile Include="processdetails.cpp" />

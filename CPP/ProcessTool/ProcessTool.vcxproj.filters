@@ -66,6 +66,15 @@
     <ClCompile Include="processmulti.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="processparameter32.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="processparameter64.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="processparameterwow64.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="AssemblyInfo.rc">
