@@ -80,7 +80,7 @@ namespace
 		GetSystemTimeAsFileTime(&currentTime);
 
 		//Calculate running time
-		LARGE_INTEGER largeInteger;
+		LARGE_INTEGER largeInteger{};
 		largeInteger.LowPart = currentTime.dwLowDateTime - createTime.dwLowDateTime;
 		largeInteger.HighPart = currentTime.dwHighDateTime - createTime.dwHighDateTime;
 

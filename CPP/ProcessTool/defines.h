@@ -4,7 +4,7 @@
 namespace
 {
 	//Types
-	typedef NTSTATUS(NTAPI* __NtQueryInformationProcess)(IN HANDLE ProcessHandle, IN PROCESSINFOCLASS ProcessInformationClass, OUT PVOID ProcessInformation, IN ULONG ProcessInformationLength, OUT PULONG ReturnLength OPTIONAL);
+	typedef NTSTATUS(NTAPI* __NtQueryInformationProcess)(IN HANDLE ProcessHandle, IN PROCESSINFOCLASS ProcessInformationClass, OUT PVOID ProcessInformation, IN ULONG ProcessInformationLength, OUT PULONG ReturnLength);
 	typedef NTSTATUS(NTAPI* __NtReadVirtualMemory32)(IN HANDLE ProcessHandle, IN PVOID BaseAddress, OUT PVOID Buffer, IN ULONG Size, OUT PULONG NumberOfBytesRead);
 	typedef NTSTATUS(NTAPI* __NtReadVirtualMemory64)(IN HANDLE ProcessHandle, IN PVOID64 BaseAddress, OUT PVOID Buffer, IN ULONG64 Size, OUT PULONG64 NumberOfBytesRead);
 	typedef NTSTATUS(NTAPI* __NtReadVirtualMemoryWOW64)(IN HANDLE ProcessHandle, IN DWORD64 BaseAddress, OUT PVOID Buffer, IN ULONG64 Size, OUT PULONG64 NumberOfBytesRead);
@@ -80,7 +80,7 @@ namespace
 		PVOID Reserved1;
 		PVOID Reserved2;
 		PVOID Reserved3;
-		PVOID ProcessParameters; //RTL_USER_PROCESS_PARAMETERS
+		PVOID RtlUserProcessParameters;
 	};
 
 	struct __UNICODE_STRING32
@@ -149,7 +149,7 @@ namespace
 		PVOID64 Reserved1;
 		PVOID64 Reserved2;
 		PVOID64 Reserved3;
-		PVOID64 ProcessParameters; //RTL_USER_PROCESS_PARAMETERS
+		PVOID64 RtlUserProcessParameters;
 	};
 
 	struct __UNICODE_STRING64
@@ -208,7 +208,7 @@ namespace
 		DWORD Reserved1;
 		DWORD Reserved2;
 		DWORD Reserved3;
-		DWORD ProcessParameters; //RTL_USER_PROCESS_PARAMETERS
+		DWORD RtlUserProcessParameters;
 	};
 
 	struct __UNICODE_STRINGWOW64

@@ -53,7 +53,7 @@ namespace
 			return L"";
 		}
 
-		__PROCESS_BASIC_INFORMATION32 basicInformation;
+		__PROCESS_BASIC_INFORMATION32 basicInformation{};
 		NTSTATUS queryResult = queryInformationProcess(hProcess, ProcessBasicInformation, &basicInformation, sizeof(basicInformation), NULL);
 		if (!NT_SUCCESS(queryResult) || basicInformation.PebBaseAddress == NULL)
 		{
@@ -61,16 +61,16 @@ namespace
 			return L"";
 		}
 
-		__PEB32 pebCopy;
+		__PEB32 pebCopy{};
 		NTSTATUS readResult = readVirtualMemory(hProcess, basicInformation.PebBaseAddress, &pebCopy, sizeof(pebCopy), NULL);
 		if (!NT_SUCCESS(readResult))
 		{
-			std::wcout << "Failed to get PebBaseAddress for: " << hProcess << std::endl;
+			std::wcout << "Failed to get Peb for: " << hProcess << std::endl;
 			return L"";
 		}
 
-		__RTL_USER_PROCESS_PARAMETERS32 paramsCopy;
-		readResult = readVirtualMemory(hProcess, pebCopy.ProcessParameters, &paramsCopy, sizeof(paramsCopy), NULL);
+		__RTL_USER_PROCESS_PARAMETERS32 paramsCopy{};
+		readResult = readVirtualMemory(hProcess, pebCopy.RtlUserProcessParameters, &paramsCopy, sizeof(paramsCopy), NULL);
 		if (!NT_SUCCESS(readResult))
 		{
 			std::wcout << "Failed to get ProcessParameters for: " << hProcess << std::endl;
@@ -107,7 +107,7 @@ namespace
 
 		if (stringLength <= 0)
 		{
-			std::wcout << "Failed to get parameter string length for: " << hProcess << std::endl;
+			std::wcout << "Failed to get ParameterString length for: " << hProcess << std::endl;
 			return L"";
 		}
 
@@ -115,7 +115,7 @@ namespace
 		readResult = readVirtualMemory(hProcess, stringBuffer, getString, stringLength, NULL);
 		if (!NT_SUCCESS(readResult))
 		{
-			std::wcout << "Failed to get parameter string for: " << hProcess << std::endl;
+			std::wcout << "Failed to get ParameterString for: " << hProcess << std::endl;
 			return L"";
 		}
 
@@ -148,7 +148,7 @@ namespace
 			return L"";
 		}
 
-		__PROCESS_BASIC_INFORMATION64 basicInformation;
+		__PROCESS_BASIC_INFORMATION64 basicInformation{};
 		NTSTATUS queryResult = queryInformationProcess(hProcess, ProcessBasicInformation, &basicInformation, sizeof(basicInformation), NULL);
 		if (!NT_SUCCESS(queryResult) || basicInformation.PebBaseAddress == NULL)
 		{
@@ -156,16 +156,16 @@ namespace
 			return L"";
 		}
 
-		__PEB64 pebCopy;
+		__PEB64 pebCopy{};
 		NTSTATUS readResult = readVirtualMemory(hProcess, basicInformation.PebBaseAddress, &pebCopy, sizeof(pebCopy), NULL);
 		if (!NT_SUCCESS(readResult))
 		{
-			std::wcout << "Failed to get PebBaseAddress for: " << hProcess << std::endl;
+			std::wcout << "Failed to get Peb for: " << hProcess << std::endl;
 			return L"";
 		}
 
-		__RTL_USER_PROCESS_PARAMETERS64 paramsCopy;
-		readResult = readVirtualMemory(hProcess, pebCopy.ProcessParameters, &paramsCopy, sizeof(paramsCopy), NULL);
+		__RTL_USER_PROCESS_PARAMETERS64 paramsCopy{};
+		readResult = readVirtualMemory(hProcess, pebCopy.RtlUserProcessParameters, &paramsCopy, sizeof(paramsCopy), NULL);
 		if (!NT_SUCCESS(readResult))
 		{
 			std::wcout << "Failed to get ProcessParameters for: " << hProcess << std::endl;
@@ -202,7 +202,7 @@ namespace
 
 		if (stringLength <= 0)
 		{
-			std::wcout << "Failed to get parameter string length for: " << hProcess << std::endl;
+			std::wcout << "Failed to get ParameterString length for: " << hProcess << std::endl;
 			return L"";
 		}
 
@@ -210,7 +210,7 @@ namespace
 		readResult = readVirtualMemory(hProcess, stringBuffer, getString, stringLength, NULL);
 		if (!NT_SUCCESS(readResult))
 		{
-			std::wcout << "Failed to get parameter string for: " << hProcess << std::endl;
+			std::wcout << "Failed to get ParameterString for: " << hProcess << std::endl;
 			return L"";
 		}
 
@@ -243,24 +243,24 @@ namespace
 			return L"";
 		}
 
-		DWORD64 pebBaseAddress;
+		DWORD64 pebBaseAddress{};
 		NTSTATUS queryResult = queryInformationProcess(hProcess, ProcessWow64Information, &pebBaseAddress, sizeof(pebBaseAddress), NULL);
 		if (!NT_SUCCESS(queryResult))
-		{
-			std::wcout << "Failed to get ProcessBasicInformation for: " << hProcess << std::endl;
-			return L"";
-		}
-
-		__PEBWOW64 pebCopy;
-		NTSTATUS readResult = readVirtualMemory(hProcess, pebBaseAddress, &pebCopy, sizeof(pebCopy), NULL);
-		if (!NT_SUCCESS(readResult))
 		{
 			std::wcout << "Failed to get PebBaseAddress for: " << hProcess << std::endl;
 			return L"";
 		}
 
-		__RTL_USER_PROCESS_PARAMETERSWOW64 paramsCopy;
-		readResult = readVirtualMemory(hProcess, pebCopy.ProcessParameters, &paramsCopy, sizeof(paramsCopy), NULL);
+		__PEBWOW64 pebCopy{};
+		NTSTATUS readResult = readVirtualMemory(hProcess, pebBaseAddress, &pebCopy, sizeof(pebCopy), NULL);
+		if (!NT_SUCCESS(readResult))
+		{
+			std::wcout << "Failed to get Peb for: " << hProcess << std::endl;
+			return L"";
+		}
+
+		__RTL_USER_PROCESS_PARAMETERSWOW64 paramsCopy{};
+		readResult = readVirtualMemory(hProcess, pebCopy.RtlUserProcessParameters, &paramsCopy, sizeof(paramsCopy), NULL);
 		if (!NT_SUCCESS(readResult))
 		{
 			std::wcout << "Failed to get ProcessParameters for: " << hProcess << std::endl;
@@ -297,7 +297,7 @@ namespace
 
 		if (stringLength <= 0)
 		{
-			std::wcout << "Failed to get parameter string length for: " << hProcess << std::endl;
+			std::wcout << "Failed to get ParameterString length for: " << hProcess << std::endl;
 			return L"";
 		}
 
@@ -305,7 +305,7 @@ namespace
 		readResult = readVirtualMemory(hProcess, stringBuffer, getString, stringLength, NULL);
 		if (!NT_SUCCESS(readResult))
 		{
-			std::wcout << "Failed to get parameter string for: " << hProcess << std::endl;
+			std::wcout << "Failed to get ParameterString for: " << hProcess << std::endl;
 			return L"";
 		}
 
