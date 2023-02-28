@@ -46,98 +46,102 @@ namespace ProcessTool
                 bool argumentWait = false;
                 foreach (string argumentRaw in args)
                 {
-                    string argument = argumentRaw.Trim();
-                    string argumentLower = argument.ToLower();
-                    AVDebug.WriteLine("Tool argument: " + argument);
-
-                    if (argumentLower.StartsWith("-exepath="))
+                    try
                     {
-                        int cutLength = "-exepath=".Length;
-                        argumentExePath = argument.Substring(cutLength);
-                    }
+                        string argument = argumentRaw.Trim();
+                        string argumentLower = argument.ToLower();
+                        AVDebug.WriteLine("Tool argument: " + argument);
 
-                    else if (argumentLower.StartsWith("-workpath="))
-                    {
-                        int cutLength = "-workpath=".Length;
-                        argumentWorkPath = argument.Substring(cutLength);
-                    }
-
-                    else if (argumentLower.StartsWith("-args="))
-                    {
-                        int cutLength = "-args=".Length;
-                        argumentArgs = argument.Substring(cutLength);
-                    }
-
-                    else if (argumentLower.StartsWith("-pid="))
-                    {
-                        int cutLength = "-pid=".Length;
-                        argumentpId = argument.Substring(cutLength);
-                    }
-
-                    else if (argumentLower.StartsWith("-pname="))
-                    {
-                        int cutLength = "-pname=".Length;
-                        argumentpName = argument.Substring(cutLength);
-                    }
-
-                    else if (argumentLower.StartsWith("-hwnd="))
-                    {
-                        int cutLength = "-hwnd=".Length;
-                        argumentHWND = argument.Substring(cutLength);
-                    }
-
-                    else if (argumentLower.StartsWith("-uwp="))
-                    {
-                        argumentUWP = true;
-                        int cutLength = "-uwp=".Length;
-                        argumentUWPAppUserModelId = argument.Substring(cutLength);
-                    }
-
-                    else if (argumentLower.StartsWith("-normal"))
-                    {
-                        if (!argumentAdmin)
+                        if (argumentLower.StartsWith("-exepath="))
                         {
-                            argumentNormal = true;
+                            int cutLength = "-exepath=".Length;
+                            argumentExePath = argument.Substring(cutLength);
+                        }
+
+                        else if (argumentLower.StartsWith("-workpath="))
+                        {
+                            int cutLength = "-workpath=".Length;
+                            argumentWorkPath = argument.Substring(cutLength);
+                        }
+
+                        else if (argumentLower.StartsWith("-args="))
+                        {
+                            int cutLength = "-args=".Length;
+                            argumentArgs = argument.Substring(cutLength);
+                        }
+
+                        else if (argumentLower.StartsWith("-pid="))
+                        {
+                            int cutLength = "-pid=".Length;
+                            argumentpId = argument.Substring(cutLength);
+                        }
+
+                        else if (argumentLower.StartsWith("-pname="))
+                        {
+                            int cutLength = "-pname=".Length;
+                            argumentpName = argument.Substring(cutLength);
+                        }
+
+                        else if (argumentLower.StartsWith("-hwnd="))
+                        {
+                            int cutLength = "-hwnd=".Length;
+                            argumentHWND = argument.Substring(cutLength);
+                        }
+
+                        else if (argumentLower.StartsWith("-uwp="))
+                        {
+                            argumentUWP = true;
+                            int cutLength = "-uwp=".Length;
+                            argumentUWPAppUserModelId = argument.Substring(cutLength);
+                        }
+
+                        else if (argumentLower.StartsWith("-normal"))
+                        {
+                            if (!argumentAdmin)
+                            {
+                                argumentNormal = true;
+                            }
+                        }
+
+                        else if (argumentLower.StartsWith("-admin"))
+                        {
+                            if (!argumentNormal)
+                            {
+                                argumentAdmin = true;
+                            }
+                        }
+
+                        else if (argumentLower.StartsWith("-allowuiaccess"))
+                        {
+                            argumentAllowUiAccess = true;
+                        }
+
+                        else if (argumentLower.StartsWith("-close"))
+                        {
+                            argumentClose = true;
+                        }
+
+                        else if (argumentLower.StartsWith("-show"))
+                        {
+                            argumentShow = true;
+                        }
+
+                        else if (argumentLower.StartsWith("-restart"))
+                        {
+                            argumentRestart = true;
+                        }
+
+                        else if (argumentLower.StartsWith("-withoutargs"))
+                        {
+                            argumentWithoutArgs = true;
+                        }
+
+                        else if (argumentLower.StartsWith("-wait"))
+                        {
+                            argumentWait = true;
                         }
                     }
-
-                    else if (argumentLower.StartsWith("-admin"))
-                    {
-                        if (!argumentNormal)
-                        {
-                            argumentAdmin = true;
-                        }
-                    }
-
-                    else if (argumentLower.StartsWith("-allowuiaccess"))
-                    {
-                        argumentAllowUiAccess = true;
-                    }
-
-                    else if (argumentLower.StartsWith("-close"))
-                    {
-                        argumentClose = true;
-                    }
-
-                    else if (argumentLower.StartsWith("-show"))
-                    {
-                        argumentShow = true;
-                    }
-
-                    else if (argumentLower.StartsWith("-restart"))
-                    {
-                        argumentRestart = true;
-                    }
-
-                    else if (argumentLower.StartsWith("-withoutargs"))
-                    {
-                        argumentWithoutArgs = true;
-                    }
-
-                    else if (argumentLower.StartsWith("-wait"))
-                    {
-                        argumentWait = true;
-                    }
+                    catch { }
                 }
 
                 //Check launch arguments
