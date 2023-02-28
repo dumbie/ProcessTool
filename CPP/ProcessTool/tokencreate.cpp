@@ -109,22 +109,4 @@ namespace
 			return hToken;
 		}
 	}
-
-	//Create restricted token
-	HANDLE Token_Create_Restricted(HANDLE& hToken)
-	{
-		//Disables Elevation, ElevationType stays Full, Integrity stays High
-		HANDLE rToken = INVALID_HANDLE_VALUE;
-		if (!CreateRestrictedToken(hToken, LUA_TOKEN, 0, NULL, 0, NULL, 0, NULL, &rToken))
-		{
-			std::wcout << L"CreateRestrictedToken failed: " << GetLastError() << std::endl;
-			return NULL;
-		}
-		else
-		{
-			std::wcout << L"CreateRestrictedToken success: " << rToken << std::endl;
-			CloseHandle(hToken);
-			return rToken;
-		}
-	}
 }

@@ -42,11 +42,10 @@ namespace
 			}
 			else
 			{
-				DWORD processId = GetProcessId(pi.hProcess);
-				std::wcout << L"CreateProcessWithTokenW success: " << processId << std::endl;
+				std::wcout << L"CreateProcessWithTokenW success: " << pi.dwProcessId << std::endl;
 				CloseHandle(pi.hThread);
 				CloseHandle(pi.hProcess);
-				return processId;
+				return pi.dwProcessId;
 			}
 		}
 		else
@@ -58,11 +57,10 @@ namespace
 			}
 			else
 			{
-				DWORD processId = GetProcessId(pi.hProcess);
-				std::wcout << L"CreateProcessAsUserW success: " << processId << std::endl;
+				std::wcout << L"CreateProcessAsUserW success: " << pi.dwProcessId << std::endl;
 				CloseHandle(pi.hThread);
 				CloseHandle(pi.hProcess);
-				return processId;
+				return pi.dwProcessId;
 			}
 		}
 	}
@@ -75,7 +73,7 @@ namespace
 		SHELLEXECUTEINFOW shellExecuteInfo{};
 		shellExecuteInfo.cbSize = sizeof(shellExecuteInfo);
 		shellExecuteInfo.nShow = SW_SHOW;
-		shellExecuteInfo.fMask = SEE_MASK_NOCLOSEPROCESS | SEE_MASK_FLAG_NO_UI;
+		shellExecuteInfo.fMask = SEE_MASK_NOCLOSEPROCESS;
 		shellExecuteInfo.lpVerb = asAdmin ? L"runas" : L"open";
 		shellExecuteInfo.lpFile = exePath.c_str();
 
@@ -136,7 +134,7 @@ namespace
 
 		//Activate application
 		DWORD processId = 0;
-		hResult = activateManager->ActivateApplication(appUserModelId.c_str(), arguments.c_str(), AO_NOERRORUI, &processId);
+		hResult = activateManager->ActivateApplication(appUserModelId.c_str(), arguments.c_str(), AO_NONE, &processId);
 
 		//Cleanup
 		activateManager->Release();
