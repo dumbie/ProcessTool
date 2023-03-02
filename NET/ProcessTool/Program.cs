@@ -20,7 +20,7 @@ namespace ProcessTool
                     AVDebug.WriteLine("\nCommand line arguments:");
                     AVDebug.WriteLine("Launch executable: ProcessTool -exepath=\"C:\\Windows\\System32\\Notepad.exe\" [opt: -workpath=\"C:\\Windows\\System32\"] [opt: -args=\"Textfile.txt\"] [opt: -normal or -admin] [opt: -allowuiaccess]");
                     AVDebug.WriteLine("Launch Windows Store: ProcessTool -uwp=\"Microsoft.WindowsNotepad_8wekyb3d8bbwe!App\" [opt: -args=\"Textfile.txt\"]");
-                    AVDebug.WriteLine("Close: ProcessTool -close -pid=1000 or -hwnd=1000 or -pname=\"Notepad.exe\" or -pname=\"Microsoft.WindowsNotepad_8wekyb3d8bbwe!App\"");
+                    AVDebug.WriteLine("Close: ProcessTool -close -pid=1000 or -hwnd=1000 or -pname=\"Notepad.exe\" or -uwp=\"Microsoft.WindowsNotepad_8wekyb3d8bbwe!App\"");
                     AVDebug.WriteLine("Restart: ProcessTool -restart -pid=1000 [opt: -withoutargs] [opt: -args=\"Textfile.txt\"]");
                     AVDebug.WriteLine("Show: ProcessTool -show -pid=1000 or -hwnd=1000");
                     Console_WaitForInput();
@@ -148,17 +148,31 @@ namespace ProcessTool
                 int returnValue = 0;
                 if (argumentClose)
                 {
-                    if (!string.IsNullOrWhiteSpace(argumentpId))
+                    if (argumentUWP)
                     {
-                        returnValue = Close_ProcessTreeById(Convert.ToInt32(argumentpId)) ? 1 : 0;
+                        if (string.IsNullOrWhiteSpace(argumentUWPAppUserModelId))
+                        {
+                            AVDebug.WriteLine("Close Windows application user model id not set.");
+                        }
+                        else
+                        {
+                            returnValue = Close_ProcessesByAppUserModelId(argumentUWPAppUserModelId) ? 1 : 0;
+                        }
                     }
-                    else if (!string.IsNullOrWhiteSpace(argumentpName))
+                    else
                     {
-                        returnValue = Close_ProcessesByName(argumentpName, true) ? 1 : 0;
-                    }
-                    else if (!string.IsNullOrWhiteSpace(argumentHWND))
-                    {
-                        returnValue = Close_ProcessByWindowMessage(new IntPtr(Convert.ToInt32(argumentHWND))) ? 1 : 0;
+                        if (!string.IsNullOrWhiteSpace(argumentpId))
+                        {
+                            returnValue = Close_ProcessTreeById(Convert.ToInt32(argumentpId)) ? 1 : 0;
+                        }
+                        else if (!string.IsNullOrWhiteSpace(argumentpName))
+                        {
+                            returnValue = Close_ProcessesByName(argumentpName, true) ? 1 : 0;
+                        }
+                        else if (!string.IsNullOrWhiteSpace(argumentHWND))
+                        {
+                            returnValue = Close_ProcessByWindowMessage(new IntPtr(Convert.ToInt32(argumentHWND))) ? 1 : 0;
+                        }
                     }
                 }
                 else if (argumentRestart)
@@ -189,7 +203,7 @@ namespace ProcessTool
                     {
                         if (string.IsNullOrWhiteSpace(argumentUWPAppUserModelId))
                         {
-                            AVDebug.WriteLine("Windows application user model id not set.");
+                            AVDebug.WriteLine("Launch Windows application user model id not set.");
                         }
                         else
                         {
